@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+asyncpg = "*"
+alembic = "*"
+python-dotenv = "*"
+fastapi = "*"
+pydentic = "*"
+uvicorn = "*"
+databases = {extras = ["postgresql"], version = "*"}
+sqlalchemy = "*"
+psycopg2-binary = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
