@@ -10,6 +10,13 @@ books = sqlalchemy.Table(
     sqlalchemy.Column("description", sqlalchemy.String),
 )
 
+authors = sqlalchemy.Table(
+    "authors",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("name", sqlalchemy.String),
+)
+
 
 class Book:
     @classmethod

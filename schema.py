@@ -9,3 +9,10 @@ class Book(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class Author(BaseModel):
+    name: str
+
+    class Config:
+        orm_mode = True
