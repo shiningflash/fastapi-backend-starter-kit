@@ -1,18 +1,18 @@
 from pydantic import BaseModel
 
 
-class Book(BaseModel):
+class Author(BaseModel):
     name: str
-    author: str
-    price: int
-    description: str
 
     class Config:
         orm_mode = True
 
 
-class Author(BaseModel):
+class Book(BaseModel):
     name: str
+    author: Author
+    price: int
+    description: str
 
     class Config:
         orm_mode = True
