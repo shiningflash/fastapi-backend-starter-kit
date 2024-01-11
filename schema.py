@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class Author(BaseModel):
     name: str
+    country: str
 
     class Config:
         orm_mode = True
@@ -10,7 +11,7 @@ class Author(BaseModel):
 
 class Book(BaseModel):
     name: str
-    author: Author
+    author: str
     price: int
     description: str
 

@@ -5,6 +5,11 @@ from app import app
 from db import db
 
 
+@app.get("/")
+async def health_check():
+    return {"health_check": "100% OK"}
+
+
 @app.post("/book/")
 async def create_book(book: SchemaBook):
     book_id = await ModelBook.create(**book.dict())

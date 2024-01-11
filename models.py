@@ -6,7 +6,7 @@ books = sqlalchemy.Table(
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column("name", sqlalchemy.String),
-    sqlalchemy.Column("author", sqlalchemy.JSON),
+    sqlalchemy.Column("author", sqlalchemy.String),
     sqlalchemy.Column("price", sqlalchemy.Integer),
     sqlalchemy.Column("description", sqlalchemy.String),
 )
@@ -16,6 +16,7 @@ authors = sqlalchemy.Table(
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column("name", sqlalchemy.String),
+    sqlalchemy.Column("country", sqlalchemy.String),
 )
 
 

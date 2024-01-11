@@ -13,6 +13,9 @@ uvicorn = "*"
 databases = {extras = ["postgresql"], version = "*"}
 sqlalchemy = "*"
 psycopg2-binary = "*"
+httpx = "*"
+pytest = "*"
+pytest-asyncio = "*"
 
 [dev-packages]
 
