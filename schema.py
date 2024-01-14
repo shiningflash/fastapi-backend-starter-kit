@@ -3,9 +3,8 @@ from pydantic import BaseModel
 
 class Author(BaseModel):
     name: str
-    country: str
 
-    class Config:
+    class ConfigDict:
         orm_mode = True
 
 
@@ -15,5 +14,5 @@ class Book(BaseModel):
     price: int
     description: str
 
-    class Config:
+    class ConfigDict:
         orm_mode = True

@@ -7,6 +7,9 @@ build:
 run:
 	docker-compose up 
 
+brun:
+	docker-compose up --build -d
+
 stop:
 	docker-compose stop 
 
@@ -21,3 +24,6 @@ migrate:
 
 shell:
 	docker-compose run web bash 
+
+test:
+	docker-compose run web pytest

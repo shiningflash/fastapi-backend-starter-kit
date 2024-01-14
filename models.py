@@ -16,7 +16,6 @@ authors = sqlalchemy.Table(
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column("name", sqlalchemy.String),
-    sqlalchemy.Column("country", sqlalchemy.String),
 )
 
 

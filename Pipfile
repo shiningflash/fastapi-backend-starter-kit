@@ -16,6 +16,8 @@ psycopg2-binary = "*"
 httpx = "*"
 pytest = "*"
 pytest-asyncio = "*"
+pathlib = "*"
+pydantic = "*"
 
 [dev-packages]
 
