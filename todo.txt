@@ -1,5 +1,5 @@
 # TODO
-# Database connect to pytest
+# Log -> Done
 # Request Schema
 # Response Schema
-# Log
+# Database connect to pytest
