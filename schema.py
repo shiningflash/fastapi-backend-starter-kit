@@ -15,7 +15,7 @@ class AuthorOut(AuthorIn):
         orm_mode = True
 
 
-class Book(BaseModel):
+class BookIn(BaseModel):
     name: str
     author: str
     price: int
@@ -25,7 +25,7 @@ class Book(BaseModel):
         orm_mode = True
 
 
-class BookOut(Book):
+class BookOut(BookIn):
     id: int
 
     class ConfigDict:

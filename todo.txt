@@ -1,5 +1,5 @@
 # TODO
 # Log -> Done
-# Request Schema
-# Response Schema
-# Database connect to pytest
+# Request Schema -> Done
+# Response Schema -> Done
+# Database connect to pytest - In Progress

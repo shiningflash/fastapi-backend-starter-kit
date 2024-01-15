@@ -1,8 +1,7 @@
 import uvicorn
-import pathlib
 from fastapi.middleware.cors import CORSMiddleware
 from models import Book as ModelBook
-from schema import Book as SchemaBook, BookOut
+from schema import BookIn, BookOut
 from app import app
 
 from fastapi import APIRouter
@@ -29,10 +28,13 @@ async def health_check():
     logger.info(f"Health check route accessed!") 
     return {"health_check": "100% OK"}
 
-@book_router.post("/book/", status_code=201, tags=["book"])
-async def create_book(book: SchemaBook):
-    book_id = await ModelBook.create(**book)
-    return {"book_id": book_id}
+
+@book_router.post("/book/", response_model=BookOut, status_code=201, tags=["book"])
+async def create_book(book: BookIn):
+    book_id = await ModelBook.create(**book.dict())
+    book = await ModelBook.get(book_id)
+    return BookOut(**book)
+
 
 @book_router.get("/book/{id}", response_model=BookOut, status_code=200, tags=["book"])
 async def get_book(id: int):
