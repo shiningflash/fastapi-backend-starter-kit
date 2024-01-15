@@ -3,3 +3,5 @@
 # Request Schema -> Done
 # Response Schema -> Done
 # Database connect to pytest - In Progress
+
+https://www.youtube.com/watch?v=9gC3Ot0LoUQ

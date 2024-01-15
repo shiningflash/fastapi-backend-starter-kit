@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
-from models import Book as ModelBook
+from models import Book
 from schema import BookIn, BookOut
 from app import app
 
@@ -31,14 +31,14 @@ async def health_check():
 
 @book_router.post("/book/", response_model=BookOut, status_code=201, tags=["book"])
 async def create_book(book: BookIn):
-    book_id = await ModelBook.create(**book.dict())
-    book = await ModelBook.get(book_id)
+    book_id = await Book.create(**book.__dict__)
+    book = await Book.get(book_id)
     return BookOut(**book)
 
 
 @book_router.get("/book/{id}", response_model=BookOut, status_code=200, tags=["book"])
 async def get_book(id: int):
-    book = await ModelBook.get(id)
+    book = await Book.get(id)
     return BookOut(**book)
 
 
