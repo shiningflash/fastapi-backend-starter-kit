@@ -21,19 +21,19 @@ SessionLocal = sessionmaker(
 )
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    logger.info("Started!!")
-    await db.connect()
-    metadata.create_all(bind=engine)
-    logger.info("DB connected!!")
-    yield
-    logger.info("Shutdown!!")
-    await db.disconnect()
-    logger.info("DB disconnected!!")
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     logger.info("Started!!")
+#     await db.connect()
+#     metadata.create_all(bind=engine)
+#     logger.info("DB connected!!")
+#     yield
+#     logger.info("Shutdown!!")
+#     await db.disconnect()
+#     logger.info("DB disconnected!!")
 
 
-app = FastAPI(lifespan=lifespan, debug=True)
+# app = FastAPI(lifespan=lifespan, debug=True)
 
 
 # Dependency to get database session

@@ -15,9 +15,6 @@ DATABASE_URL = os.environ["DATABASE_URL"]
 
 engine = create_engine(
     DATABASE_URL,
-    connect_args={
-        "check_same_thread": False
-    },
     poolclass = StaticPool,
 )
 
@@ -39,21 +36,31 @@ def override_get_db():
 app.dependency_overrides[get_db] = override_get_db
 
 
-def test_health_check():
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.json() == {"health_check": "100% OK"}
+# def test_health_check():
+#     response = client.get("/")
+#     assert response.status_code == 200
+#     assert response.json() == {"health_check": "100% OK"}
 
 
-def test_create_book():
-    payload = {
-        "name": "Eat that frog",
-        "author": "Brian Tracy",
-        "price": 280,
-        "description": "Book for procastination."
-    }
-    response = client.post("/book/", json=payload)
-    assert response.status_code == 201
+# def test_create_book():
+#     payload = {
+#         "name": "Eat that frog",
+#         "author": "Brian Tracy",
+#         "price": 280,
+#         "description": "Book for procastination."
+#     }
+#     response = client.post("/book/", json=payload)
+#     assert response.status_code == 201
+
+
+def test_create_item():
+    response = client.post(
+        "/items/", json={"name": "Test Item 6"}
+    )
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["name"] == "Test Item 6"
+    assert "id" in data
 
 
 def setup() -> None:
