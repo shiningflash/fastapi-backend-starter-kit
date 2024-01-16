@@ -1,6 +1,6 @@
 # FastAPI Demo App with Postgres, Alembic, Pytest, and Docker
 
-This repository provides a simple FastAPI demo application with PostgreSQL as the relational database, Alembic for migrations, Pytest for testing, and Docker for containerization.
+This repository provides a simple FastAPI demo application with PostgreSQL as the relational database, Alembic for migrations, Pytest for testing, and Docker for containerization. It has a CRUD operation example with proper log set up.
 
 ## Getting Started
 
@@ -12,25 +12,16 @@ This repository provides a simple FastAPI demo application with PostgreSQL as th
     $ export PIPENV_VENV_IN_PROJECT=1
     ```
 
-2. Create an empty folder and a Pipfile:
-
-    ```bash
-    $ mkdir .venv
-    $ touch Pipfile
-    ```
-
-3. Execute the following commands to create and activate the virtual environment:
+2. Activate the virtual environment:
 
     ```bash
     $ pipenv shell
     ```
 
-4. Install the required packages:
+3. Install the required packages:
 
     ```bash
-    $ pipenv install databases[postgresql]
-    $ pipenv install asyncpg
-    $ pipenv install alembic
+    $ make install
     ```
 
 ### Initialize Alembic
@@ -38,13 +29,13 @@ This repository provides a simple FastAPI demo application with PostgreSQL as th
 1. Initiate Alembic:
 
     ```bash
-    $ alembic init alembic
+    $ make build
     ```
 
 2. Create a revision for the initial table (e.g., 'book' table):
 
     ```bash
-    $ alembic revision -m 'book table'
+    $ make makemigrations
     ```
 
 ### Build and Run with Docker
@@ -52,41 +43,39 @@ This repository provides a simple FastAPI demo application with PostgreSQL as th
 1. Build the Docker images:
 
     ```bash
-    $ docker-compose build
+    $ make build
     ```
 
 2. Make migrations:
 
     ```bash
-    $ docker-compose run web alembic revision --autogenerate
+    $ make makemigrations
     ```
 
 3. Migrate the database:
 
     ```bash
-    $ docker-compose run web alembic upgrade head
+    $ make migrate
     ```
 
 4. Run the application:
 
     ```bash
-    $ docker-compose up
+    $ make run
     ```
 
-Now, project will be running on `http://localhost:8000`
+Now, the project will be running on `http://localhost:8000`
 
 ### Pgadmin4
 
 `http://localhost:5050`
-
 
 ## Testing [Yet to implement]
 
 To run tests using Pytest, execute the following command within the virtual environment:
 
 ```bash
-$ pipenv install pytest
-$ pipenv run pytest
+$ make test
 ```
 
 ## Documentation
