@@ -36,30 +36,36 @@ def override_get_db():
 app.dependency_overrides[get_db] = override_get_db
 
 
-# def test_health_check():
-#     response = client.get("/")
-#     assert response.status_code == 200
-#     assert response.json() == {"health_check": "100% OK"}
+def test_health_check():
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.json() == {"health_check": "100% OK"}
 
 
-# def test_create_book():
-#     payload = {
-#         "name": "Eat that frog",
-#         "author": "Brian Tracy",
-#         "price": 280,
-#         "description": "Book for procastination."
-#     }
-#     response = client.post("/book/", json=payload)
-#     assert response.status_code == 201
-
-
-def test_create_item():
-    response = client.post(
-        "/items/", json={"name": "Test Item 6"}
-    )
-    assert response.status_code == 200, response.text
+def test_create_book():
+    payload = {
+        "name": "Eat that frog 13",
+        "author": "Brian Tracy",
+        "price": 280,
+        "description": "Book for procastination."
+    }
+    response = client.post("/books/", json=payload)
     data = response.json()
-    assert data["name"] == "Test Item 6"
+    assert data["name"] == "Eat that frog 13"
+    assert response.status_code == 201
+    assert "id" in data
+
+
+def test_get_books():
+    response = client.get("/books/")
+    data = response.json()
+    assert response.status_code == 200
+
+
+def test_get_book():
+    response = client.get("/books/10")
+    data = response.json()
+    assert response.status_code == 200
     assert "id" in data
 
 

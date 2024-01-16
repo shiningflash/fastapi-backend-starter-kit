@@ -30,3 +30,10 @@ class BookOut(BookIn):
 
     class ConfigDict:
         orm_mode = True
+
+
+class BookUpdate(BookIn):
+    pass
+
+    class ConfigDict:
+        orm_mode = True

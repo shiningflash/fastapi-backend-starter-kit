@@ -1,33 +1,20 @@
-from db import db, metadata, sqlalchemy
+from sqlalchemy import create_engine, String, Integer, Column
+
+from app import Base
 
 
-books = sqlalchemy.Table(
-    "books",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("name", sqlalchemy.String),
-    sqlalchemy.Column("author", sqlalchemy.String),
-    sqlalchemy.Column("price", sqlalchemy.Integer),
-    sqlalchemy.Column("description", sqlalchemy.String),
-)
-
-authors = sqlalchemy.Table(
-    "authors",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("name", sqlalchemy.String),
-)
+class Book(Base):
+    __tablename__ = "books"
+    __table_args__ = {'extend_existing': True}
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(25), unique=True, index=True, nullable=False)
+    author = Column(String(25))
+    price = Column(Integer())
+    description = Column(String(100))
 
 
-class Book:
-    @classmethod
-    async def get(cls, id):
-        query = books.select().where(books.c.id == id)
-        book = await db.fetch_one(query)
-        return book
-
-    @classmethod
-    async def create(cls, **book):
-        query = books.insert().values(**book)
-        book_id = await db.execute(query)
-        return book_id
+class Author(Base):
+    __tablename__ = "authors"
+    __table_args__ = {'extend_existing': True}
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(25), nullable=False)
