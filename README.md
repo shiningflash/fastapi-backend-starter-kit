@@ -70,7 +70,7 @@ Now, the project will be running on `http://localhost:8000`
 
 `http://localhost:5050`
 
-## Testing [Yet to implement]
+## Testing
 
 To run tests using Pytest, execute the following command within the virtual environment:
 
