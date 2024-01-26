@@ -9,6 +9,7 @@ class UserBasic(BaseModel):
     email: EmailStr
     first_name: str
     last_name: str
+    bio: str = None
 
 
 class UserId(BaseModel):
@@ -16,18 +17,12 @@ class UserId(BaseModel):
 
 
 class UserCreate(UserBasic):
-    first_name: str
-    last_name: str
-    email: EmailStr
-
     class Config:
         extra = 'forbid'
         orm_mode = True
         
 
 class User(UserId, UserBasic, AppBaseModel):
-    pass
-
     class Config:
         orm_mode = True
 
@@ -35,9 +30,9 @@ class User(UserId, UserBasic, AppBaseModel):
 class UserUpdate(UserId):
     email: Optional[EmailStr]
     password: Optional[str]
-    organization_name: Optional[str]
     first_name: Optional[str]
     last_name: Optional[str]
+    bio: Optional[str]
 
     class Config:
         extra = 'forbid'
