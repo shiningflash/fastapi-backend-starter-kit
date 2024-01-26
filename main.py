@@ -6,7 +6,7 @@ from fastapi import FastAPI, APIRouter, HTTPException
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
 
-from logger import logger
+from core.logger import logger
 from app.models import User, Blog
 from app.schemas import *
 from app.db.base import engine, get_db
