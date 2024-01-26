@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from logger import logger
 from models import User, Blog
-from schema import *
+from app.schemas import *
 from app.db.base import engine, get_db
 
 from models import Base
