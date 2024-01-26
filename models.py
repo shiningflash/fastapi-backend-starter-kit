@@ -1,20 +1,35 @@
-from sqlalchemy import create_engine, String, Integer, Column
-
+import uuid
 from app import Base
+from sqlalchemy import Column, String, String, JSON, ForeignKey, Column, DateTime, func
+from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import UUID
 
 
-class Book(Base):
-    __tablename__ = "books"
+class User(Base):
+    __tablename__ = 'users'
     __table_args__ = {'extend_existing': True}
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(25), unique=True, index=True, nullable=False)
-    author = Column(String(25))
-    price = Column(Integer())
-    description = Column(String(100))
+
+    id = Column(UUID(as_uuid=True), default=uuid.uuid4, primary_key=True, index=True)
+    first_name = Column(String(50), index=True, nullable=False)
+    last_name = Column(String(50), index=True, nullable=False)
+    email = Column(String(255), unique=True, index=True, nullable=False)
+    password = Column(String(255), nullable=False)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+
+    blogs = relationship('Blog', back_populates='user')
 
 
-class Author(Base):
-    __tablename__ = "authors"
+class Blog(Base):
+    __tablename__ = "blogs"
     __table_args__ = {'extend_existing': True}
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(25), nullable=False)
+
+    id = Column(UUID(as_uuid=True), default=uuid.uuid4, primary_key=True, index=True)
+    title = Column(String(100), unique=True, index=True, nullable=False)
+    sub_title = Column(String(100), unique=True, index=True)
+    author = Column(UUID(as_uuid=True), ForeignKey('users.id'), index=True)
+    body = Column(String(200), nullable=False)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+
+    user = relationship('User', back_populates='blogs')

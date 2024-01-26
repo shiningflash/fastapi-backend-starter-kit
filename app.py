@@ -3,10 +3,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-from db import db, metadata
 
-
-DATABASE_URL = os.environ["DATABASE_URL"]
+# DATABASE_URL = os.environ["DATABASE_URL"]
+DATABASE_URL = "postgresql://postgres:postgres@db:5432/test_db"
 
 engine = create_engine(DATABASE_URL)
 

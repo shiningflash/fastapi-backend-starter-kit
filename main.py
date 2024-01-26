@@ -7,8 +7,8 @@ from fastapi.params import Depends
 from sqlalchemy.orm import Session
 
 from logger import logger
-from models import Book
-from schema import BookIn, BookOut, BookUpdate
+from models import User, Blog
+from schema import *
 from app import engine, get_db
 from db import metadata
 
@@ -47,49 +47,49 @@ def health_check():
     return {"health_check": "100% OK"}
 
 
-@book_router.get("/books/", status_code=200, tags=["book"])
-def get_books(db: Session = Depends(get_db)) -> List[BookOut]:
-    db_book = db.query(Book)
+@book_router.get("/blog/", status_code=200, tags=["blog"])
+def get_blogs(db: Session = Depends(get_db)) -> List[BlogList]:
+    db_book = db.query(Blog)
     return db_book
 
 
-@book_router.post("/books/", status_code=201, tags=["book"])
-def create_item(item: BookIn, db: Session = Depends(get_db)) -> BookOut:
-    db_book = Book(**item.model_dump())
-    db.add(db_book)
-    db.commit()
-    db.refresh(db_book)
-    return BookOut(**db_book.__dict__)
+# @book_router.post("/blog/", status_code=201, tags=["blog"])
+# def create_item(item: BookIn, db: Session = Depends(get_db)) -> BookOut:
+#     db_book = Book(**item.model_dump())
+#     db.add(db_book)
+#     db.commit()
+#     db.refresh(db_book)
+#     return BookOut(**db_book.__dict__)
 
 
-@book_router.get("/books/{id}", status_code=200, tags=["book"])
-def get_book(id: int, db: Session = Depends(get_db)) -> BookOut:
-    db_book = db.query(Book).filter(Book.id == id).first()
-    if db_book is None:
-        raise HTTPException(status_code=404, detail="Book not found")
-    return BookOut(**db_book.__dict__)
+# @book_router.get("/books/{id}", status_code=200, tags=["book"])
+# def get_book(id: int, db: Session = Depends(get_db)) -> BookOut:
+#     db_book = db.query(Book).filter(Book.id == id).first()
+#     if db_book is None:
+#         raise HTTPException(status_code=404, detail="Book not found")
+#     return BookOut(**db_book.__dict__)
 
 
-@book_router.put("/books/{id}", status_code=200, tags=["book"])
-def update_item(id: int, book: BookUpdate, db: Session = Depends(get_db)) -> BookOut:
-    db_book = db.query(Book).filter(Book.id == id).first()
-    if db_book is None:
-        raise HTTPException(status_code=404, detail="Boook not found")
-    for key, value in book.model_dump().items():
-        setattr(db_book, key, value)
-    db.commit()
-    db.refresh(db_book)
-    return BookOut(**db_book.__dict__)
+# @book_router.put("/books/{id}", status_code=200, tags=["book"])
+# def update_item(id: int, book: BookUpdate, db: Session = Depends(get_db)) -> BookOut:
+#     db_book = db.query(Book).filter(Book.id == id).first()
+#     if db_book is None:
+#         raise HTTPException(status_code=404, detail="Boook not found")
+#     for key, value in book.model_dump().items():
+#         setattr(db_book, key, value)
+#     db.commit()
+#     db.refresh(db_book)
+#     return BookOut(**db_book.__dict__)
 
 
-@book_router.delete("/books/{id}", status_code=200, tags=["book"])
-def update_item(id: int, book: BookUpdate, db: Session = Depends(get_db)) -> BookOut:
-    db_book = db.query(Book).filter(Book.id == id).first()
-    if db_book is None:
-        raise HTTPException(status_code=404, detail="Boook not found")
-    db.delete(db_book)
-    db.commit()
-    return BookOut(**db_book.__dict__)
+# @book_router.delete("/books/{id}", status_code=200, tags=["book"])
+# def update_item(id: int, book: BookUpdate, db: Session = Depends(get_db)) -> BookOut:
+#     db_book = db.query(Book).filter(Book.id == id).first()
+#     if db_book is None:
+#         raise HTTPException(status_code=404, detail="Boook not found")
+#     db.delete(db_book)
+#     db.commit()
+#     return BookOut(**db_book.__dict__)
 
 
 app.include_router(health_router)
