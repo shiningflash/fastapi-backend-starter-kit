@@ -1,8 +1,9 @@
 import uuid
-from app import Base
 from sqlalchemy import Column, String, String, JSON, ForeignKey, Column, DateTime, func
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
+
+from db import Base
 
 
 class User(Base):
@@ -12,7 +13,7 @@ class User(Base):
     id = Column(UUID(as_uuid=True), default=uuid.uuid4, primary_key=True, index=True)
     first_name = Column(String(50), index=True, nullable=False)
     last_name = Column(String(50), index=True, nullable=False)
-    email = Column(String(255), unique=True, index=True, nullable=False)
+    email = Column(String(50), unique=True, index=True, nullable=False)
     password = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
@@ -28,7 +29,7 @@ class Blog(Base):
     title = Column(String(100), unique=True, index=True, nullable=False)
     sub_title = Column(String(100), unique=True, index=True)
     author = Column(UUID(as_uuid=True), ForeignKey('users.id'), index=True)
-    body = Column(String(200), nullable=False)
+    body = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
