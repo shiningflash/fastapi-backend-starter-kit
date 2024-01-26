@@ -10,13 +10,14 @@ from logger import logger
 from models import User, Blog
 from schema import *
 from app import engine, get_db
-from db import metadata
+
+from models import Base
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Started!!")
-    metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
     logger.info("DB connected!!")
     yield
     logger.info("Shutdown!!")
