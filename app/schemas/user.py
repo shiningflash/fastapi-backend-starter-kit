@@ -17,12 +17,14 @@ class UserId(BaseModel):
 
 
 class UserCreate(UserBasic):
+    password: str
+    
     class Config:
         extra = 'forbid'
         orm_mode = True
         
 
-class User(UserId, UserBasic, AppBaseModel):
+class UserDetails(AppBaseModel, UserBasic, UserId):
     class Config:
         orm_mode = True
 

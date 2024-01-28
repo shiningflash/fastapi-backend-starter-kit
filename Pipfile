@@ -18,6 +18,9 @@ pytest = "*"
 pytest-asyncio = "*"
 pathlib = "*"
 pydantic = {extras = ["email"], version = "*"}
+passlib = "*"
+python-jose = "*"
+pydantic-settings = "*"
 
 [dev-packages]
 

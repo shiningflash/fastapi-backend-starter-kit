@@ -8,7 +8,7 @@ run:
 	docker-compose up 
 
 brun:
-	docker-compose up --build -d
+	docker-compose up --build
 
 stop:
 	docker-compose stop 
