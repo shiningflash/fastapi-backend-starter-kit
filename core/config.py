@@ -23,5 +23,15 @@ class Settings(BaseSettings):
     ALGORITHM: ClassVar = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7 # 7 days
+    
+    # Rollbar
+    ROLLBAR_ACCESS_TOKEN:str = os.environ['ROLLBAR_ACCESS_TOKEN']
+
+    # GCS
+    BUCKET_NAME:str = os.environ['BUCKET_NAME']
+
+    # client credentials
+    OAUTH_CLIENT_ID: str = os.environ['OAUTH_CLIENT_ID']
+    OAUTH_CLIENT_SECRET: str = os.environ['OAUTH_CLIENT_SECRET']
 
 settings = Settings()
