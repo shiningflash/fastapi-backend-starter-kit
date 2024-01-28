@@ -9,34 +9,35 @@ import os
 import sys
 from dotenv import load_dotenv
 
+from main import Base
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 sys.path.append(BASE_DIR)
-
-import models
-from db import metadata
-
-target_metadata = metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
+config.set_main_option("sqlalchemy.url", os.environ["DATABASE_URL"])
+
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-fileConfig(config.config_file_name)
+if config.config_file_name is not None:
+    fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
+target_metadata = Base.metadata
+
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-
-config.set_main_option("sqlalchemy.url", os.environ["DATABASE_URL"])
 
 
 def run_migrations_offline() -> None:

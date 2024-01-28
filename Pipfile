@@ -17,7 +17,7 @@ httpx = "*"
 pytest = "*"
 pytest-asyncio = "*"
 pathlib = "*"
-pydantic = "*"
+pydantic = {extras = ["email"], version = "*"}
 
 [dev-packages]
 
