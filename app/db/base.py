@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.ext.declarative import declarative_base
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

@@ -9,6 +9,7 @@ from app.db.base import engine
 
 from app.models import Base
 from app.api.user import user_router
+from app.api.auth import auth_router
 
 
 @asynccontextmanager
@@ -46,6 +47,7 @@ def health_check():
 
 app.include_router(health_router)
 app.include_router(user_router)
+app.include_router(auth_router)
 
 
 if __name__ == "__main__":
