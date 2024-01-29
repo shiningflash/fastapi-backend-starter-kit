@@ -22,6 +22,8 @@ passlib = "*"
 python-jose = "*"
 pydantic-settings = "*"
 python-multipart = "*"
+casbin = "*"
+casbin-sqlalchemy-adapter = "*"
 
 [dev-packages]
 

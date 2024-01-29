@@ -36,3 +36,5 @@ urllib3==2.1.0
 uvicorn==0.25.0
 pydantic[email]
 python-multipart
+casbin
+casbin_sqlalchemy_adapter

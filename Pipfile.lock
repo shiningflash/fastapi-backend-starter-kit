@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4502f255c246c1892e4255d7b77722586b312edeb57d554ce248162fae62a33f"
+            "sha256": "b94b9fc512b621a04f46af005201696260b35c78ddd96a2c9d43f159a3dd494a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -96,6 +96,24 @@
             "index": "pypi",
             "markers": "python_full_version >= '3.8.0'",
             "version": "==0.29.0"
+        },
+        "casbin": {
+            "hashes": [
+                "sha256:73c5bb375154019af9ba87a5e05aa12cdae28227c5466228aa76d361182653cc",
+                "sha256:e17f365b439f430f8bbde533e580dc1eb85cf1da5e5c830aafad3b1acec00cb7"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.3'",
+            "version": "==1.35.0"
+        },
+        "casbin-sqlalchemy-adapter": {
+            "hashes": [
+                "sha256:0ae1e7ddc081b4207f9ec851824b21886a98c57e0224a44201a7fa23ba567985",
+                "sha256:6c1edafa7c604c911aef012cb611301b9691167a420698b7676e46433498f354"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.3'",
+            "version": "==0.5.2"
         },
         "certifi": {
             "hashes": [
@@ -588,6 +606,13 @@
             ],
             "markers": "python_version >= '3.6' and python_version < '4'",
             "version": "==4.9"
+        },
+        "simpleeval": {
+            "hashes": [
+                "sha256:22a2701a5006e4188d125d34accf2405c2c37c93f6b346f2484b6422415ae54a",
+                "sha256:4a30f9cc01825fe4c719c785e3762623e350c4840d5e6855c2a8496baaa65fac"
+            ],
+            "version": "==0.9.13"
         },
         "six": {
             "hashes": [

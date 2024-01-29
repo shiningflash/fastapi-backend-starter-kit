@@ -7,6 +7,8 @@ from app import models, schemas
 from app.db.base import get_db
 from app.db.crud import CRUDBase
 from app.utils.security import get_password_hash
+from app.services.oauth2 import add_new_role
+from core.role import Role
 
 
 user_router = APIRouter(prefix='/user', tags=['User'])
@@ -21,4 +23,6 @@ def create_user(new_user: schemas.UserCreate, db: Session = Depends(get_db)):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exists")
     new_user.password = get_password_hash(new_user.password)
     user_dict = user_crud.create(db=db, obj_in=new_user)
+    # Add role 'user' to the new user
+    add_new_role(new_user.email, Role.USER, db)
     return user_dict
