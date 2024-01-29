@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "06dcf310bd3833c4e881196e8b37e51ceedce51f29d4aef2f4acfc72365ab05a"
+            "sha256": "4502f255c246c1892e4255d7b77722586b312edeb57d554ce248162fae62a33f"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -532,21 +532,21 @@
         },
         "pytest": {
             "hashes": [
-                "sha256:249b1b0864530ba251b7438274c4d251c58d868edaaec8762893ad4a0d71c36c",
-                "sha256:50fb9cbe836c3f20f0dfa99c565201fb75dc54c8d76373cd1bde06b06657bdb6"
+                "sha256:2cf0005922c6ace4a3e2ec8b4080eb0d9753fdc93107415332f50ce9e7994280",
+                "sha256:b090cdf5ed60bf4c45261be03239c2c1c22df034fbffe691abe93cd80cea01d8"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.8'",
-            "version": "==8.0.0"
+            "markers": "python_version >= '3.7'",
+            "version": "==7.4.4"
         },
         "pytest-asyncio": {
             "hashes": [
-                "sha256:37a9d912e8338ee7b4a3e917381d1c95bfc8682048cb0fbc35baba316ec1faba",
-                "sha256:af313ce900a62fbe2b1aed18e37ad757f1ef9940c6b6a88e2954de38d6b1fb9f"
+                "sha256:2143d9d9375bf372a73260e4114541485e84fca350b0b6b92674ca56ff5f7ea2",
+                "sha256:b0079dfac14b60cd1ce4691fbfb1748fe939db7d0234b5aba97197d10fbe0fef"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==0.23.3"
+            "version": "==0.23.4"
         },
         "python-dotenv": {
             "hashes": [
@@ -564,6 +564,15 @@
             ],
             "index": "pypi",
             "version": "==3.3.0"
+        },
+        "python-multipart": {
+            "hashes": [
+                "sha256:e9925a80bb668529f1b67c7fdb0a5dacdd7cbfc6fb0bff3ea443fe22bdd62132",
+                "sha256:ee698bab5ef148b0a760751c261902cd096e57e10558e11aca17646b74ee1c18"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.7'",
+            "version": "==0.0.6"
         },
         "python-stdnum": {
             "hashes": [

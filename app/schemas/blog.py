@@ -7,27 +7,33 @@ from app.schemas.base import AppBaseModel
 class BlogBasic(BaseModel):
     title: str
     sub_title: str = None
-    author: str
+    author: UUID4
+
+
+class BlogBasicWithAuthor(BlogBasic):
+    author: UUID4
 
 
 class BlogId(BaseModel):
     id: UUID4
 
 
-class BlogList(BlogId, BlogBasic):
+class BlogList(BlogBasicWithAuthor, BlogId):
     class Config:
         orm_mode = True
 
 
-class BlogCreate(BlogBasic):
+class BlogCreate(BaseModel):
+    title: str
+    sub_title: str = None
     body: str
+    author: UUID4 = '57785471-bc81-4062-a621-15657ccc0a0c'
 
     class Config:
-        extra = 'forbid'
         orm_mode = True
 
 
-class BlogDetail(BlogId, BlogCreate, AppBaseModel):
+class BlogDetails(AppBaseModel, BlogCreate, BlogId):
     class Config:
         orm_mode = True
 

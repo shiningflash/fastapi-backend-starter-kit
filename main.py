@@ -10,6 +10,8 @@ from app.db.base import engine
 from app.models import Base
 from app.api.user import user_router
 from app.api.auth import auth_router
+from app.api.blog import blog_router
+from app.api.token import token_router
 
 
 @asynccontextmanager
@@ -39,7 +41,7 @@ app.add_middleware(
 health_router = APIRouter()
 
 
-@health_router.get("/", status_code=200, tags=["health"])
+@health_router.get("/", status_code=200, tags=["Health Status"])
 def health_check():
     logger.info(f"Health check route accessed!")
     return {"health_check": "100% OK"}
@@ -48,6 +50,8 @@ def health_check():
 app.include_router(health_router)
 app.include_router(user_router)
 app.include_router(auth_router)
+app.include_router(blog_router)
+app.include_router(token_router)
 
 
 if __name__ == "__main__":

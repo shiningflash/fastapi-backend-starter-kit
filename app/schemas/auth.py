@@ -27,3 +27,8 @@ class TokenPayload(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+
+
+class ClientTokenResponse(BaseModel):
+    access_token: str
+    token_type: str

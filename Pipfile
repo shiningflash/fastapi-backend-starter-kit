@@ -21,6 +21,7 @@ pydantic = {extras = ["email"], version = "*"}
 passlib = "*"
 python-jose = "*"
 pydantic-settings = "*"
+python-multipart = "*"
 
 [dev-packages]
 
