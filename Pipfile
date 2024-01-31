@@ -24,6 +24,8 @@ pydantic-settings = "*"
 python-multipart = "*"
 casbin = "*"
 casbin-sqlalchemy-adapter = "*"
+fastapi-mail = "*"
+apscheduler = "*"
 
 [dev-packages]
 

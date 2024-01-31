@@ -12,6 +12,9 @@ from app.api.user import user_router
 from app.api.auth import auth_router
 from app.api.blog import blog_router
 from app.api.token import token_router
+from app.api.mail import mail_router
+from app.api.invitation import invitation_router
+from scheduler.invitation import invitation_scheduler
 
 
 @asynccontextmanager
@@ -52,7 +55,10 @@ app.include_router(user_router)
 app.include_router(auth_router)
 app.include_router(blog_router)
 app.include_router(token_router)
+app.include_router(mail_router)
+app.include_router(invitation_router)
 
 
 if __name__ == "__main__":
+    invitation_scheduler.start()
     uvicorn.run("main:app", host="0.0.0.0", port=8000)

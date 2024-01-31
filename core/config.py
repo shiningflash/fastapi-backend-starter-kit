@@ -14,6 +14,9 @@ class Settings(BaseSettings):
 
     PROJECT_NAME: str = "Demo App"
     APP_ENV: str = os.environ['APP_ENV']
+    
+    # Base URL
+    BASE_URL: str = os.getenv('BASE_URL')
 
     # DB
     DATABASE_URL: Optional[str] = os.environ['DATABASE_URL']
@@ -33,5 +36,16 @@ class Settings(BaseSettings):
     # client credentials
     OAUTH_CLIENT_ID: str = os.environ['OAUTH_CLIENT_ID']
     OAUTH_CLIENT_SECRET: str = os.environ['OAUTH_CLIENT_SECRET']
+    
+    # send mail credentials
+    MAIL_USERNAME: str = os.getenv('MAIL_USERNAME')
+    MAIL_PASSWORD: str = os.getenv('MAIL_PASSWORD')
+    MAIL_FROM: str = os.getenv('MAIL_FROM')
+    MAIL_PORT: int = int(os.getenv('MAIL_PORT'))
+    MAIL_SERVER: str = os.getenv('MAIL_SERVER')
+    MAIL_FROM_NAME: str = os.getenv('MAIN_FROM_NAME')
+    
+    # invitations
+    INVITATION_EXPIRY_IN_HOURS: int = os.getenv('INVITATION_EXPIRY_IN_HOURS')
 
 settings = Settings()
