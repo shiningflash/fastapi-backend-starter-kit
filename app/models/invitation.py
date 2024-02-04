@@ -1,7 +1,10 @@
 import uuid
-from sqlalchemy import Column, String, String, Column, DateTime, func
+from datetime import datetime, timedelta
+from sqlalchemy import (
+    Column, String, DateTime, ForeignKey
+)
 from sqlalchemy.dialects.postgresql import UUID
-from datetime import timedelta
+from sqlalchemy.orm import relationship
 
 from app.db.base import Base
 from core.config import settings
@@ -10,14 +13,20 @@ from core.config import settings
 class Invitation(Base):
     __tablename__ = "invitations"
     __table_args__ = {'extend_existing': True}
-
-    id = Column(UUID(as_uuid=True), default=uuid.uuid4, primary_key=True, index=True)
-    email = Column(String(100), index=True, nullable=False)
-    unique_token = Column(String, nullable=False, unique=True)
-    created_at = Column(DateTime, default=func.now())
-    # TODO
-    # created_by = ''
     
+    id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
+    full_name = Column(String(150), nullable=False)
+    email = Column(String(100), nullable=False, index=True)
+    organization = Column(String(100), nullable=False)
+    organizational_role = Column(String(100), nullable=False)
+    role = Column(String(100), nullable=False)
+    unique_token = Column(String, nullable=False, unique=True, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_by_id = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    
+    created_by = relationship("User", back_populates="invitations")
+
     @property
-    def expires_at(self):
+    def expired_at(self):
         return self.created_at + timedelta(hours=settings.INVITATION_EXPIRY_IN_HOURS)

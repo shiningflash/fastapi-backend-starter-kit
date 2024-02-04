@@ -10,6 +10,7 @@ from app.services.oauth2 import get_current_user
 from app.utils.invitation import generate_unique_token
 from app.services.mail import send_email_async
 from core.config import settings
+from app.models import User
 
 
 invitation_router = APIRouter(tags=['Invitation'])
@@ -18,26 +19,30 @@ invitation_crud = CRUDBase(model=models.Invitation)
 
 @invitation_router.post('/invite')
 async def invite(
-    email: str,
+    invitation_data: schemas.InvitationCreateRequest,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
     unique_token = generate_unique_token()
+    created_by_id = db.query(User).filter(User.email == current_user.email).first()
     
     new_invitation = schemas.InvitationCreate(
-        email=email,
-        unique_token=unique_token
+        full_name=invitation_data.full_name,
+        email=invitation_data.email,
+        organization=invitation_data.organization,
+        organizational_role=invitation_data.organizational_role,
+        role=invitation_data.role,
+        unique_token=unique_token,
+        created_by_id=created_by_id.id
     )
     
     new_invitation.model_dump()
-    invitation = invitation_crud.create(db=db, obj_in=new_invitation)
+    _ = invitation_crud.create(db=db, obj_in=new_invitation)
     
-    # Send invitation email
-    # send_email_async(email, unique_token)
     await send_email_async(
       subject='Invitation to Join Our Company X',
-      email_to=email,
-      body={"title": "Invitation", "name": "Dear Mr. X", "invitation_url": f"{settings.BASE_URL}/invitation/{email}/{unique_token}"}
+      email_to=invitation_data.email,
+      body={"title": "Invitation", "name": "Dear Mr. X", "invitation_url": f"{settings.BASE_URL}/invitation/{unique_token}"}
     )
     
     return {'message': 'Invitation sent successfully'}

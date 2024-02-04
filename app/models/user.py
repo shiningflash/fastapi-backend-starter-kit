@@ -20,3 +20,4 @@ class User(Base):
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
     blogs = relationship('Blog', back_populates='user')
+    invitations = relationship('Invitation', back_populates='created_by')
