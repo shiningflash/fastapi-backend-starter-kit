@@ -26,6 +26,7 @@ casbin = "*"
 casbin-sqlalchemy-adapter = "*"
 fastapi-mail = "*"
 apscheduler = "*"
+itsdangerous = "*"
 
 [dev-packages]
 

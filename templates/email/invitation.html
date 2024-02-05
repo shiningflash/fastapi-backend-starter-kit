@@ -1,19 +1,63 @@
+<!-- templates/email/invitation.html -->
+
+<!DOCTYPE html>
 <html>
-<body style="margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif;">
-<div style="width: 100%; background: #efefef; border-radius: 10px; padding: 10px;">
-  <div style="margin: 0 auto; width: 90%; text-align: center;">
-    <h1 style="background-color: rgba(0, 53, 102, 1); padding: 5px 10px; border-radius: 5px; color: white;">{{ title }}</h1>
-    <div style="margin: 30px auto; background: white; width: 40%; border-radius: 10px; padding: 50px; text-align: center;">
-      <h3 style="margin-bottom: 100px; font-size: 24px;">{{ name }}!</h3>
-      <p style="margin-bottom: 30px;">We're thrilled to invite you to join our organization as a user! If you're ready to dive in, please click the <b>"Let's Go"</b> button to set up your profile and start exploring our resources and opportunities.</p>
-      <a style="display: block; margin: 0 auto; border: none; background-color: rgba(255, 214, 10, 1); color: white; width: 200px; line-height: 24px; padding: 10px; font-size: 24px; border-radius: 10px; cursor: pointer; text-decoration: none;"
-        href="{{ invitation_url }}"
-        target="_blank"
-      >
-        Let's Go
-      </a>
+<head>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 600px;
+    margin: 40px auto;
+  }
+  .header {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+  .invitation {
+    background-color: #00a8ff;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  .footer {
+    font-size: 12px;
+    color: #777;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="path_to_logo" alt="{{ organization }} Logo" style="max-width: 100px;">
+    </div>
+    <h1>You have been invited to join {{ organization }}</h1>
+    <p>Hi {{ full_name }},</p>
+    <p>{{ created_by_name }} has invited you to join the team on {{ organization }}</p>
+    <a href="{{ invitation_url }}" class="invitation">Accept Invitation</a>
+    <p>Get started by sharing some basic information</p>
+    <p>Welcome and thanks!</p>
+    <p>The NDex Team</p>
+    <div class="footer">
+      <p>This email was sent to <a href="mailto:{{ email }}">{{ email }}</a>. If you'd rather not receive this kind of email, you can <a href="link_to_unsubscribe">unsubscribe</a> or <a href="link_to_manage_preferences">manage your email preferences</a>.</p>
+      <p>© 2024 NthDS, 100 Smith Street, Melbourne VIC 3000</p>
     </div>
   </div>
-</div>
 </body>
 </html>

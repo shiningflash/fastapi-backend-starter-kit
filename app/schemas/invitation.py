@@ -1,5 +1,7 @@
 from pydantic import BaseModel, UUID4, EmailStr
 from typing import Optional
+from datetime import datetime
+from app.schemas import UserBasic
 
 
 class InvitationCreateRequest(BaseModel):
@@ -13,4 +15,16 @@ class InvitationCreateRequest(BaseModel):
 class InvitationCreate(InvitationCreateRequest):
     unique_token: str
     created_by_id: UUID4
-    
+
+
+class Invitation(InvitationCreate):
+    id: UUID4
+    created_at: datetime
+    updated_at: datetime
+    created_by: UserBasic = Optional
+    resent_count: int = Optional
+
+
+class InvitationResend(BaseModel):
+    unique_token: str
+    resent_count: int = Optional

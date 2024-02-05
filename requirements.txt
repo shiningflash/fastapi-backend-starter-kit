@@ -40,3 +40,4 @@ casbin
 casbin_sqlalchemy_adapter
 fastapi-mail
 APScheduler==3.10.4
+itsdangerous

@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, timedelta
 from sqlalchemy import (
-    Column, String, DateTime, ForeignKey
+    Column, String, Integer, DateTime, ForeignKey
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -23,10 +23,11 @@ class Invitation(Base):
     unique_token = Column(String, nullable=False, unique=True, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    resent_count = Column(Integer, default=0)
     created_by_id = Column(UUID(as_uuid=True), ForeignKey('users.id'))
     
     created_by = relationship("User", back_populates="invitations")
 
     @property
-    def expired_at(self):
-        return self.created_at + timedelta(hours=settings.INVITATION_EXPIRY_IN_HOURS)
+    def expires_at(self):
+        return self.updated_at + timedelta(hours=settings.INVITATION_URL_MAX_AGE)

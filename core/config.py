@@ -46,6 +46,8 @@ class Settings(BaseSettings):
     MAIL_FROM_NAME: str = os.getenv('MAIN_FROM_NAME')
     
     # invitations
-    INVITATION_EXPIRY_IN_HOURS: int = os.getenv('INVITATION_EXPIRY_IN_HOURS')
+    INVITATION_URL_SECRET_KEY: str = os.getenv('INVITATION_URL_SECRET_KEY')
+    INVITATION_URL_SECURITY_PASSWORD_SALT: str = os.getenv('INVITATION_URL_SECURITY_PASSWORD_SALT')
+    INVITATION_URL_MAX_AGE: int = os.getenv('INVITATION_URL_MAX_AGE')
 
 settings = Settings()
