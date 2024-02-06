@@ -30,4 +30,5 @@ def confirm_invitation_token(token: str) -> str:
         data = serializer.loads(token, max_age=settings.INVITATION_URL_MAX_AGE)
     except Exception:  # Catch exceptions like SignatureExpired, BadSignature
         return None
+    data['token'] = token
     return data

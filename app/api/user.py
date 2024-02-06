@@ -1,14 +1,15 @@
 from fastapi import APIRouter, HTTPException, status
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
+from datetime import datetime
 
-from core.logger import logger
 from app import models, schemas
 from app.db.base import get_db
 from app.db.crud import CRUDBase
-from app.utils.security import get_password_hash
 from app.services.oauth2 import add_new_role
 from core.role import Role
+from app.utils.invitation import confirm_invitation_token
+from app.utils.security import get_password_hash
 
 
 user_router = APIRouter(prefix='/user', tags=['User'])
@@ -16,13 +17,45 @@ user_crud = CRUDBase(model=models.User)
 
 
 @user_router.post('', response_model=schemas.UserDetails)
-def create_user(new_user: schemas.UserCreate, db: Session = Depends(get_db)):
-    new_user.model_dump()
-    existing_user = db.query(models.User).filter(models.User.email == new_user.email).first()
+def create_user(
+    data: schemas.UserCreateRequest,
+    db: Session = Depends(get_db)
+):
+    token_data = confirm_invitation_token(token=data.token)
+    invitation = db.query(models.Invitation).filter_by(unique_token=data.token).first()
+    
+    if data.password != data.confirm_password:
+        raise HTTPException(status_code=400, detail='Password did not match')
+    
+    if (not token_data or not invitation or invitation.expires_at < datetime.now()):
+        raise HTTPException(status_code=400, detail='Invalid information or expired invitation link')
+
+    existing_user = db.query(models.User).filter(models.User.email == invitation.email).first()
     if existing_user:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exists")
-    new_user.password = get_password_hash(new_user.password)
-    user_dict = user_crud.create(db=db, obj_in=new_user)
-    # Add role 'user' to the new user
-    add_new_role(new_user.email, Role.USER, db)
+
+    user = schemas.UserCreate(
+        full_name=data.full_name,
+        email=invitation.email,
+        organization_name=invitation.organization,
+        organizational_role=invitation.organizational_role,
+        password=get_password_hash(data.password),
+        role=invitation.role,
+        invited_by_id=invitation.created_by_id
+    )
+    # user = schemas.UserCreate(
+    #     full_name=data.full_name,
+    #     email='bagdad@gmail.com',
+    #     organization_name="ABC",
+    #     organizational_role="admin",
+    #     role='admin',
+    #     password=get_password_hash(data.password)
+    # )
+    user.model_dump()
+    user_dict = user_crud.create(db=db, obj_in=user)
+    
+    # Add role to the new user
+    add_new_role(user.email, invitation.role, db)
+    # add_new_role(user.email, 'admin', db)
+    
     return user_dict

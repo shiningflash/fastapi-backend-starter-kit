@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from datetime import datetime
 from typing import List
@@ -56,14 +57,14 @@ async def invite(
           "full_name": invitation_data.full_name,
           "email": invitation_data.email,
           "organization": invitation_data.organization,
-          "created_by_name": created_by.first_name,
+          "created_by_name": created_by.full_name,
           "invitation_url": f"{settings.BASE_URL}/accept-invitation/{unique_token}"}
     )
     
     return {'message': 'Invitation sent successfully'}
 
 
-@invitation_router.get("/accept-invitation/{token}")
+@invitation_router.post("/accept-invitation/{token}")
 async def accept_invitation(
     token: str,
     db: Session = Depends(get_db)
@@ -71,13 +72,12 @@ async def accept_invitation(
     data = confirm_invitation_token(token=token)
     invitation = db.query(models.Invitation).filter_by(unique_token=token).first()
     
-    # <SOME CHECKING HERE>
     if not data or not invitation or invitation.expires_at < datetime.now():
         raise HTTPException(status_code=400, detail='Invalid or expired invitation link')
     
     # Redirect to the signup page with pre-filled information (data)
-    # return RedirectResponse(url=f"/signup?email={email}&full_name={full_name}&organization={organization}")
-    return {'message': 'You can now join our platform'}
+    # return RedirectResponse(url=f"/user?email={invitation.email}&full_name={invitation.full_name}&organization_name={invitation.organization}&organizational_role='user'")
+    return data
     
 
 @invitation_router.get("/resend-invitation/{email}")
@@ -103,7 +103,7 @@ async def resend_invitation(
     unique_token = generate_invitation_token(data=data_to_create_unique_token)
     
     invitation.unique_token = unique_token
-    invitation.resent_count = invitation.resent_count+1
+    invitation.resent_count += 1
     _ = invitation_crud.update(db=db, obj_in=invitation)
     
     await send_email_async(
@@ -113,7 +113,7 @@ async def resend_invitation(
           "full_name": invitation.full_name,
           "email": invitation.email,
           "organization": invitation.organization,
-          "created_by_name": created_by.first_name,
+          "created_by_name": created_by.full_name,
           "invitation_url": f"{settings.BASE_URL}/accept-invitation/{unique_token}"}
     )
     

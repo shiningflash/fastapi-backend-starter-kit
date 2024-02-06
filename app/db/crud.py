@@ -3,6 +3,7 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from datetime import datetime
 
 from app.db.base import Base
 
@@ -54,6 +55,10 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             update_data = obj_in
         else:
             update_data = jsonable_encoder(obj_in)
+        
+        # Manually set updated_at to current time
+        update_data['updated_at'] = datetime.utcnow()
+    
         for field in obj_data:
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
