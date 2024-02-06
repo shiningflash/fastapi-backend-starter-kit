@@ -20,6 +20,7 @@ class Invitation(Base):
     organization = Column(String(100), nullable=False)
     organizational_role = Column(String(100), nullable=False)
     role = Column(String(100), nullable=False)
+    status = Column(String(100), nullable=False, default='Invited')
     unique_token = Column(String, nullable=False, unique=True, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

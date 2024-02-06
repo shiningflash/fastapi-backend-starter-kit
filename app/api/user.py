@@ -7,10 +7,8 @@ from app import models, schemas
 from app.db.base import get_db
 from app.db.crud import CRUDBase
 from app.services.oauth2 import add_new_role
-from core.role import Role
 from app.utils.invitation import confirm_invitation_token
 from app.utils.security import get_password_hash
-
 
 user_router = APIRouter(prefix='/user', tags=['User'])
 user_crud = CRUDBase(model=models.User)
