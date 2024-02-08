@@ -27,6 +27,9 @@ class TokenPayload(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+    full_name: Optional[str] = None
+    role: Optional[str] = None
+    organization_name: Optional[str] = None
 
 
 class ClientTokenResponse(BaseModel):

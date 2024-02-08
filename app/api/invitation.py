@@ -8,21 +8,21 @@ from typing import List
 from app import models, schemas
 from app.db.base import get_db
 from app.db.crud import CRUDBase
-from app.services.oauth2 import get_current_user
+from app.services.oauth2 import get_current_user, get_current_user_authorization
 from app.utils.invitation import generate_invitation_token, confirm_invitation_token
 from app.services.mail import send_email_async
 from core.config import settings
 from app.models import User
 
 
-invitation_router = APIRouter(tags=['Invitation'])
+invitation_router = APIRouter(prefix='/invitation', tags=['Invitation'])
 invitation_crud = CRUDBase(model=models.Invitation)
 
 
-@invitation_router.get("/invitations")
+@invitation_router.get('')
 def get_invitations(
     db: Session = Depends(get_db),
-    current_user = Depends(get_current_user)
+    current_user = Depends(get_current_user_authorization)
 ) -> List[schemas.Invitation]:
     db_invitations = db.query(models.Invitation)
     return db_invitations
@@ -32,7 +32,7 @@ def get_invitations(
 async def invite(
     invitation_data: schemas.InvitationCreateRequest,
     db: Session = Depends(get_db),
-    current_user = Depends(get_current_user)
+    current_user = Depends(get_current_user_authorization)
 ):
     unique_token = generate_invitation_token(data=invitation_data)
     created_by = db.query(User).filter(User.email == current_user.email).first()
@@ -64,7 +64,7 @@ async def invite(
     return {'message': 'Invitation sent successfully'}
 
 
-@invitation_router.post("/accept-invitation/{token}")
+@invitation_router.post("/accept/{token}")
 async def accept_invitation(
     token: str,
     db: Session = Depends(get_db)
@@ -80,7 +80,7 @@ async def accept_invitation(
     return data
     
 
-@invitation_router.get("/resend-invitation/{email}")
+@invitation_router.get("/resend/{email}")
 async def resend_invitation(
     email: str,
     db: Session = Depends(get_db),

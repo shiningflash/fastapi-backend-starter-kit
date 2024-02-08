@@ -6,7 +6,6 @@ from datetime import datetime
 from app import models, schemas
 from app.db.base import get_db
 from app.db.crud import CRUDBase
-from app.services.oauth2 import add_new_role
 from app.utils.invitation import confirm_invitation_token
 from app.utils.security import get_password_hash
 
@@ -53,7 +52,7 @@ def create_user(
     user_dict = user_crud.create(db=db, obj_in=user)
     
     # Add role to the new user
-    add_new_role(user.email, invitation.role, db)
+    # add_new_role(user.email, invitation.role, db)
     # add_new_role(user.email, 'admin', db)
     
     return user_dict
