@@ -46,7 +46,7 @@ def get_current_user_authorization(
     return current_user
 
 
-# def add_new_role(email: str, role: str, db: Session = Depends(get_db)) -> None:
-#     enforcer.add_role_for_user(email, role)
-#     db.commit()  # Ensure changes are persisted
+def add_new_role_in_org(email: str, role: str, dom: str, db: Session = Depends(get_db)) -> None:
+    enforcer.add_role_for_user_in_domain(email, role, dom)
+    db.commit()  # Ensure changes are persisted
     
