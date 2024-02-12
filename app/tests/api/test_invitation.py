@@ -1,49 +1,5 @@
-import os
-
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.pool import StaticPool
-from sqlalchemy.orm import sessionmaker
-
-from main import app
-from app import get_db
-
-
-DATABASE_URL = os.environ["DATABASE_URL"]
-
-engine = create_engine(
-    DATABASE_URL,
-    poolclass = StaticPool,
-)
-
-TestingSessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
-
-client = TestClient(app)
-
-def override_get_db():
-    db = TestingSessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-app.dependency_overrides[get_db] = override_get_db
-
-def setup() -> None:
-    # create the tables in the test database
-    # metadata.create_all(bind=engine)
-    pass
-
-
-def teardown() -> None:
-    # Drop the tables in the test database 
-    # CAUTION: if test database if different
-    # metadata.drop_all(bind=engine)
-    pass
+from app.api.auth import login
+from app.api.invitation import invite
 
 
 def test_invite(client):
