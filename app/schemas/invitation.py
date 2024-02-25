@@ -11,6 +11,11 @@ class InvitationCreateRequest(BaseModel):
     organizational_role: str
     role: str
 
+    class Config:
+        from_attributes = True
+        orm_mode = True
+        validate_assignment = True
+
 
 class InvitationCreate(InvitationCreateRequest):
     unique_token: str

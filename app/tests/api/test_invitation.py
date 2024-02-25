@@ -1,30 +1,41 @@
-from app.api.auth import login
-from app.api.invitation import invite
+import factory
+from faker import Faker
+
+from app import models
+from app import schemas
+
+fake = Faker(["en_US"])
+
+
+class InvitationFactory(factory.Factory):
+    class Meta:
+        model = models.Invitation
+
+    full_name = fake.name()
+    organization = fake.company()
+    email = "{}@{}.io".format(
+        full_name.split()[0].lower(), organization.split()[0].lower()
+    )
+    organizational_role = "user"
+    role = "user"
 
 
 def test_invite(client):
     login_response = client.post(
-        "/login",
-        data={"username": "bagdad@gmail.com", "password": "bagdad"}
+        "api/login",
+        json={"email": "bagdad@gmail.com", "password": "bagdad"}
     )
-    
+
     # Check if login was successful and get the token
     assert login_response.status_code == 200
-    token = login_response.json()['access_token']
-    
-    # Prepare invitation data
-    invitation_data = {
-        "full_name": "Sakib Al Hasan",
-        "email": "sakb@gmail.com",
-        "organization": "ABC",
-        "organizational_role": "user",
-        "role": "user"
-    }
+    token = client.cookies.get('authorization')
+
+    mock_invitation = schemas.InvitationCreateRequest.from_orm(InvitationFactory()).__dict__
 
     # Send invitation using the '/invite' endpoint with the authorization token
     response = client.post(
-        "/invitation/invite",
-        json=invitation_data,
+        "api/invitation/invite",
+        json=mock_invitation,
         headers={"Authorization": f"Bearer {token}"}
     )
 

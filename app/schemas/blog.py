@@ -20,7 +20,7 @@ class BlogId(BaseModel):
 
 class BlogList(BlogBasicWithAuthor, BlogId):
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class BlogCreate(BaseModel):
@@ -30,12 +30,12 @@ class BlogCreate(BaseModel):
     author: UUID4 = '57785471-bc81-4062-a621-15657ccc0a0c'
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class BlogDetails(AppBaseModel, BlogCreate, BlogId):
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class BlogUpdate(BlogId):
@@ -45,4 +45,4 @@ class BlogUpdate(BlogId):
 
     class Config:
         extra = 'forbid'
-        orm_mode = True
+        from_attributes = True

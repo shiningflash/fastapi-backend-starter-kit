@@ -1,6 +1,36 @@
 version: "3"
 
 services:
+  web:
+    container_name: demoapp-backend
+    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/test_db
+      - BASE_URL=http://localhost:8000
+      - APP_ENV=development
+      - JWT_REFRESH_SECRET_KEY=JWT_REFRESH_SECRET_KEY_HERE
+      - JWT_SECRET_KEY=WT_SECRET_KEY_HERE
+      - ROLLBAR_ACCESS_TOKEN=ROLLBAR_ACCESS_TOKEN_HERE
+      - BUCKET_NAME=BUCKET_NAME
+      - OAUTH_CLIENT_ID=CLIENT_IDw
+      - OAUTH_CLIENT_SECRET=OAUTH_CLIENT_SECRET
+      - MAIL_USERNAME=norval.hahn60@ethereal.email
+      - MAIL_PASSWORD=NupfGHXtsUdgx36VuK
+      - MAIL_FROM=norval.hahn60@ethereal.email
+      - MAIL_PORT=587
+      - MAIL_SERVER=smtp.ethereal.email
+      - MAIL_FROM_NAME=Norval Hahn
+      - INVITATION_URL_SECRET_KEY=INVITATION_URL_SECRET_KEY_HERE
+      - INVITATION_URL_SECURITY_PASSWORD_SALT=INVITATION_URL_SECURITY_PASSWORD_SALT_HERE
+      - INVITATION_URL_MAX_AGE=172800
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+
   db:
     image: postgres:11
     ports:
@@ -9,15 +39,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=test_db
-  web:
-    build: .
-    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
-    volumes:
-      - .:/code
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
 
   pgadmin:
     container_name: pgadmin
@@ -29,3 +50,6 @@ services:
       - "5050:80"
     depends_on:
       - db
+  
+volumes:
+  db:

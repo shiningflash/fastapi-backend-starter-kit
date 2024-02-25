@@ -7,7 +7,7 @@ from core.logger import logger
 from app.schemas import *
 from app.db.base import engine
 
-from app.models import Base
+from app.db.base_class import Base
 from scheduler.invitation import invitation_scheduler
 from app.routes import router as api_router
 

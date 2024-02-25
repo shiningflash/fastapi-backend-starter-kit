@@ -70,6 +70,6 @@ def create_user(
 @user_router.get('')
 def get_users(
     db: Session = Depends(get_db)
-) -> List[schemas.UserDetails]:
+) -> List[schemas.UserList]:
     db_users = db.query(models.User)
     return db_users

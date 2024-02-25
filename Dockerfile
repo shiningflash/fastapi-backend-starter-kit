@@ -6,13 +6,17 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV SQLALCHEMY_SILENCE_UBER_WARNING 1
 
-WORKDIR /code/
+WORKDIR /demoapp/app/
 
-# Install dependencies
-RUN pip install pipenv
-COPY Pipfile Pipfile.lock /code/
-RUN pipenv install --system --dev
+RUN ls -lha
+COPY ./app/requirements.txt requirements.txt
+RUN python -m pip install --upgrade pip
+RUN python -m pip install -r requirements.txt
+RUN ls -lha
 
-COPY . /code/
+WORKDIR /demoapp/
+COPY . .
 
-EXPOSE 8000
+ENV PYTHONPATH=/demoapp
+# RUN chmod +x /demoapp/start.sh
+# CMD ["./start.sh"]

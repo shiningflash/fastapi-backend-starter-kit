@@ -10,6 +10,9 @@ class UserBasic(BaseModel):
     organization_name: str = None
     organizational_role: str = None
 
+    class Config:
+        from_attributes = True
+
 
 class UserId(BaseModel):
     id: UUID4
@@ -20,10 +23,10 @@ class UserCreateRequest(BaseModel):
     password: str
     confirm_password: str
     token: str
-    
+
     class Config:
         extra = 'forbid'
-        orm_mode = True
+        from_attributes = True
 
 
 class UserCreate(BaseModel):
@@ -34,18 +37,18 @@ class UserCreate(BaseModel):
     organizational_role: str = Optional
     role: str
     invited_by_id: UUID4 = Optional
-    
+
     class Config:
         extra = 'forbid'
-        orm_mode = True
-        
+        from_attributes = True
+
 
 class UserDetails(AppBaseModel, UserBasic, UserId):
     role: str
     invited_by_id: UUID4 = Optional
-    
+
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserUpdate(UserId):
@@ -56,4 +59,12 @@ class UserUpdate(UserId):
 
     class Config:
         extra = 'forbid'
-        orm_mode = True
+        from_attributes = True
+
+
+class UserList(BaseModel):
+    email: EmailStr
+    full_name: str
+
+    class Config:
+        from_attributes = True

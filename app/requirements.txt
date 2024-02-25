@@ -24,7 +24,6 @@ pydantic==2.5.3
 pydantic_core==2.14.6
 pydentic==0.0.1.dev3
 pytest==7.4.4
-pytest-asyncio==0.23.3
 python-dotenv==1.0.0
 python-stdnum==1.19
 requests==2.31.0
@@ -41,3 +40,8 @@ casbin_sqlalchemy_adapter
 fastapi-mail
 APScheduler==3.10.4
 itsdangerous
+python-jose
+passlib
+databases[postgresql]
+faker
+factory-boy
