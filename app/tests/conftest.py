@@ -10,7 +10,9 @@ from main import app
 
 engine = create_engine(settings.DATABASE_URL)
 
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+TestingSessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=engine
+)
 Base.metadata.create_all(bind=engine, checkfirst=True)
 
 
@@ -27,6 +29,7 @@ def db():
 @pytest.fixture
 def client(db):
     print('\n\n\n\n >>>> \n\n\n\n')
+
     def test_db():
         return db
 
