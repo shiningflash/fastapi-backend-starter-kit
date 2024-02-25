@@ -18,7 +18,7 @@ enforcer = casbin.Enforcer("core/model.conf", adapter)
 
 
 def get_current_user(
-    data: str = Depends(oauth2_scheme), 
+    data: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
 ):
     credentials_exception = HTTPException(
@@ -39,7 +39,7 @@ def get_current_user_authorization(
     dom = current_user.organization_name
     obj = req.url.path
     act = req.method
-    if not(enforcer.enforce(sub, dom, obj, act)):
+    if not (enforcer.enforce(sub, dom, obj, act)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Method not authorized for this user")
