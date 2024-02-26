@@ -52,7 +52,7 @@ def login(request:OAuth2PasswordRequestForm = Depends(), db: Session = Depends(g
 def logout():
     try:
         content = {
-            "message" : "logout successful"
+            "message": "logout successful"
         }
         response = JSONResponse(content=content)
         response.delete_cookie(key='authorization')
