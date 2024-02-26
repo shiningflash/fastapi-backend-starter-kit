@@ -6,8 +6,10 @@ services:
     command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
     depends_on:
       - db
+      - test-db
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/test_db
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/dev
+      - TEST_DATABASE_URL=postgresql://postgres:postgres@db:5432/test
       - BASE_URL=http://localhost:8000
       - APP_ENV=development
       - JWT_REFRESH_SECRET_KEY=JWT_REFRESH_SECRET_KEY_HERE
@@ -34,11 +36,24 @@ services:
   db:
     image: postgres:11
     ports:
-      - "5432:5432"
+      - "5433:5432"
+    volumes:
+      - db:/postgresql
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=test_db
+      - POSTGRES_DB=dev
+  
+  test-db:
+    image: postgres:11
+    ports:
+      - "5434:5432"
+    volumes:
+      - test-db:/postgresql
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=test
 
   pgadmin:
     container_name: pgadmin
@@ -53,3 +68,4 @@ services:
   
 volumes:
   db:
+  test-db:
