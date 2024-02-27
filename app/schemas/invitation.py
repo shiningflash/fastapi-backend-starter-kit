@@ -13,7 +13,6 @@ class InvitationCreateRequest(BaseModel):
 
     class Config:
         from_attributes = True
-        orm_mode = True
         validate_assignment = True
 
 
