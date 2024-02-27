@@ -8,8 +8,8 @@ services:
       - db
       - test-db
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/dev
-      - TEST_DATABASE_URL=postgresql://postgres:postgres@db:5432/test
+      - DATABASE_URL=postgresql://postgres:postgres@db/db
+      - TEST_DATABASE_URL=postgresql://postgres:postgres@test-db/test-db
       - BASE_URL=http://localhost:8000
       - APP_ENV=development
       - JWT_REFRESH_SECRET_KEY=JWT_REFRESH_SECRET_KEY_HERE
@@ -42,7 +42,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=dev
+      - POSTGRES_DB=db
   
   test-db:
     image: postgres:11
@@ -53,18 +53,18 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=test
+      - POSTGRES_DB=test-db
 
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
-      - PGADMIN_DEFAULT_PASSWORD=admin
-    ports:
-      - "5050:80"
-    depends_on:
-      - db
+  # pgadmin:
+  #   container_name: pgadmin
+  #   image: dpage/pgadmin4
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
+  #     - PGADMIN_DEFAULT_PASSWORD=admin
+  #   ports:
+  #     - "5050:80"
+  #   depends_on:
+  #     - db
   
 volumes:
   db:
