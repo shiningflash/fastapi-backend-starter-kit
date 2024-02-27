@@ -28,16 +28,20 @@ def create_user(
     if data.password != data.confirm_password:
         raise HTTPException(status_code=400, detail='Password did not match')
 
-    if (not token_data or not invitation or invitation.expires_at < datetime.now()):
-        raise HTTPException(status_code=400, detail='Invalid information or expired invitation link')
+    if (not token_data or not invitation or
+            invitation.expires_at < datetime.now()):
+        raise HTTPException(
+            status_code=400,
+            detail='Invalid information or expired invitation link')
 
     existing_user = db.query(models.User
                              ).filter(models.User.email == invitation.email
                                       ).first()
     if existing_user:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exists"
-            )
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already exists"
+        )
 
     user = schemas.UserCreate(
         full_name=data.full_name,
@@ -48,14 +52,6 @@ def create_user(
         role=invitation.role,
         invited_by_id=invitation.created_by_id
     )
-    # user = schemas.UserCreate(
-    #     full_name=data.full_name,
-    #     email='bagdad@gmail.com',
-    #     organization_name="ABC",
-    #     organizational_role="admin",
-    #     role='admin',
-    #     password=get_password_hash(data.password)
-    # )
     user.model_dump()
     user_dict = user_crud.create(db=db, obj_in=user)
 

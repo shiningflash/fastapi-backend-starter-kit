@@ -1,3 +1,5 @@
+import pytest
+
 from app.tests.factories import UserFactory, CasbinRuleFactory
 
 
@@ -89,3 +91,55 @@ def test_logout(client):
     assert response.status_code == 200
     assert response.json()["message"] == "logout successful"
     assert "authorization" not in response.cookies
+
+
+# .... More Testing .......
+# !!!!!!!!!!!!!!!!!!!!!!!!!
+
+# Parameterized Testing for Input Variations
+@pytest.mark.parametrize("email,password,status_code,detail", [
+    ("valid@test.com", "wrongpassword", 400, "Incorrect email or password"),
+    ("invalidemail", "password", 422, None),  # Assuming 422 Unprocessable Entity for invalid email format
+    (None, "password", 422, None),  # Missing email
+    ("valid@test.com", None, 422, None),  # Missing password
+])
+def test_login_various_inputs(client, email, password, status_code, detail):
+    """
+    Test 1: Incorrect email or password
+    Test 2: Assuming 422 Unprocessable Entity for invalid email format
+    Test 3: Missing email
+    Test 4: Missing password
+    """
+    response = client.post(
+        "api/login",
+        json={"email": email, "password": password}
+    )
+    assert response.status_code == status_code
+    if detail:
+        assert response.json()["detail"] == detail
+
+
+# Comprehensive Error Handling
+def test_login_nonexistent_user(client):
+    response = client.post("api/login", json={"email": "nonexistent@test.com", 'password': 'password'})
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Incorrect email or password"
+
+
+# Security Tests (SQL Injection)
+@pytest.mark.parametrize("email, password", [
+    ("'; DROP TABLE users; --", "password"),  # SQL Injection
+    ("valid@test.com", "' OR '1'='1"),  # SQL Injection attempt in password
+])
+def test_login_security_vulnerabilities(client, email, password):
+    response = client.post("api/login", json={"email": email, "password": password})
+    assert response.status_code in [400, 422]  # Expecting failure status codes
+
+
+# # Testing Rate Limiting (If Applicable)
+# def test_login_rate_limiting(client):
+#     for _ in range(10):  # Assuming rate limit is 5 attempts
+#         response = client.post(
+#             "api/login",
+#             json={"email": 'nonexistent@test.com', 'password': 'wrongpassword'})
+#     assert response.status_code == 429  # Assuming 429 Too Many Requests for rate limiting

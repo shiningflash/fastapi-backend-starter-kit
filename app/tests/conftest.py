@@ -16,25 +16,6 @@ TestingSessionLocal = sessionmaker(
 )
 Base.metadata.create_all(bind=engine, checkfirst=True)
 
-
-# @pytest.fixture
-# def db():
-#     yield TestingSessionLocal()
-#     for table in reversed(Base.metadata.sorted_tables):
-#         with engine.connect() as conn:
-#             conn.execute(table.delete())
-#             conn.commit()
-
-
-# @pytest.fixture
-# def client(db):
-#     def test_db():
-#         return db
-
-#     app.dependency_overrides[get_db] = test_db
-#     return TestClient(app)
-
-
 db = TestingSessionLocal()
 
 

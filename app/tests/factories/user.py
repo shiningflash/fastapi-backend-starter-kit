@@ -20,3 +20,18 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
     organizational_role = factory.Faker('job')
     role = factory.Iterator(['user', 'superuser', 'admin'])
     password = factory.LazyAttribute(lambda _: get_password_hash("password"))
+
+    @factory.post_generation
+    def set_email(self, create, extracted, **kwargs):
+        if extracted:
+            # Use the extracted email if provided.
+            self.email = extracted
+
+    @factory.post_generation
+    def set_password(self, create, extracted, **kwargs):
+        if extracted:
+            # Use the extracted password, hash it, and set it.
+            self.password = get_password_hash(extracted)
+        else:
+            # If no password was provided, use 'password' and hash it.
+            self.password = get_password_hash("password")
