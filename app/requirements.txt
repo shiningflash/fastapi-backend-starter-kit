@@ -45,3 +45,5 @@ passlib
 databases[postgresql]
 faker
 factory-boy
+pytest-asyncio
+pytest-mock

@@ -1,0 +1,13 @@
+{
+    "users" : [
+        {
+            "id": "64676da0-84c1-44bd-a45d-f5cbf0de5ec0",
+            "full_name": "test user full name",
+            "email": "testuser4@example.com",
+            "organization_name": "test",
+            "organizational_role": "admin",
+            "role": "admin",
+            "password": "password"
+        }
+    ]
+}
