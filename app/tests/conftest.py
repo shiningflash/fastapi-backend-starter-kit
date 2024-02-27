@@ -9,7 +9,7 @@ from core.config import settings
 from main import app
 
 
-engine = create_engine(settings.DATABASE_URL)
+engine = create_engine(settings.TEST_DATABASE_URL)
 
 TestingSessionLocal = sessionmaker(
     autocommit=False, autoflush=False, bind=engine
