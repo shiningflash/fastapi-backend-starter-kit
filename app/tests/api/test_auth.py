@@ -105,10 +105,10 @@ def test_logout(client):
 ])
 def test_login_various_inputs(client, email, password, status_code, detail):
     """
-    Test 1: Incorrect email or password
-    Test 2: Assuming 422 Unprocessable Entity for invalid email format
-    Test 3: Missing email
-    Test 4: Missing password
+    TestCase 1: Incorrect email or password
+    TestCase 2: Assuming 422 Unprocessable Entity for invalid email format
+    TestCase 3: Missing email
+    TestCase 4: Missing password
     """
     response = client.post(
         "api/login",
