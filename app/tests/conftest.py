@@ -7,6 +7,9 @@ from app.db.base_class import Base
 from app.db.base import get_db
 from core.config import settings
 from main import app
+from app.tests.utils.utils import push_data_into_test_db
+
+from core.logger import logger
 
 
 engine = create_engine(settings.TEST_DATABASE_URL)
@@ -20,21 +23,27 @@ db = TestingSessionLocal()
 
 
 @pytest.fixture
-def test_db():
-    yield db
-    db.close()
+def my_test_db():
+    yield TestingSessionLocal()
+    for table in reversed(Base.metadata.sorted_tables):
+        with engine.connect() as conn:
+            trans = conn.begin()
+            try:
+                conn.execute(table.delete())
+                trans.commit()
+            except:
+                trans.rollback()
+                raise
 
 
 @pytest.fixture()
-def client(override_get_db):
-    app.dependency_overrides[get_db] = override_get_db
+def client(my_test_db):
+    def test_my_test_db():
+        return my_test_db
+    
+    app.dependency_overrides[get_db] = test_my_test_db
+    
     with TestClient(app) as test_client:
+        push_data_into_test_db(my_test_db)
         yield test_client
     app.dependency_overrides.clear()
-
-
-@pytest.fixture
-def override_get_db(test_db):
-    def override():
-        return test_db
-    return override

@@ -1,0 +1,12 @@
+{
+    "users" : [
+        {
+            "full_name": "test user full name",
+            "email": "testuser4@example.com",
+            "organization_name": "test",
+            "organizational_role": "admin",
+            "role": "admin",
+            "password": "password"
+        }
+    ]
+}

@@ -2,10 +2,12 @@ import pytest
 
 from app.tests.factories import UserFactory, CasbinRuleFactory
 
+from core.logger import logger
 
-def test_login_logout_successful(client, test_db):
+
+def test_login_logout_successful(client, my_test_db):
     # Setup 1: Create a test user
-    test_user = UserFactory()
+    test_user = UserFactory(session=my_test_db)
 
     # Setup 2: Define role permission for the user
     _ = CasbinRuleFactory(
@@ -32,10 +34,6 @@ def test_login_logout_successful(client, test_db):
     assert logout_response.json()["message"] == "logout successful"
     assert "authorization" not in logout_response.cookies
 
-    # Teardown: Delete the test user, not working
-    # test_db.delete(test_user)
-    # test_db.commit()
-
 
 def test_login_with_invalid_credentials_raises_error(client):
     # Action: Make a request to the login endpoint
@@ -50,9 +48,11 @@ def test_login_with_invalid_credentials_raises_error(client):
     assert "authorization" not in response.cookies
 
 
-def test_oauth_login_successful(client):
+def test_oauth_login_successful(client, my_test_db):
     # Setup 1: Create a test user
-    test_user = UserFactory()
+    test_user = UserFactory(session=my_test_db)
+    
+    logger.info(f'\n\n\n\n test_user: {test_user.email} \n\n\n')
 
     # Setup 2: Define role permission for the user
     _ = CasbinRuleFactory(
@@ -66,6 +66,8 @@ def test_oauth_login_successful(client):
         "api/oauth-login",
         data={'username': test_user.email, 'password': 'password'}
     )
+    
+    logger.info(f'\n\n\n\n response: {response} \n\n\n')
 
     # Assertions
     assert response.status_code == 200

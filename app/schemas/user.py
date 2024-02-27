@@ -36,7 +36,7 @@ class UserCreate(BaseModel):
     organization_name: str
     organizational_role: str = Optional
     role: str
-    invited_by_id: UUID4 = Optional
+    invited_by_id: UUID4 | None = Optional
 
     class Config:
         extra = 'forbid'
