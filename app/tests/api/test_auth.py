@@ -1,9 +1,16 @@
-from app.tests.factories.user import UserFactory
+from app.tests.factories import UserFactory, CasbinRuleFactory
 
 
 def test_login_logout_successful(client, test_db):
-    # Setup: Create a test user
+    # Setup 1: Create a test user
     test_user = UserFactory()
+
+    # Setup 2: Define role permission for the user
+    _ = CasbinRuleFactory(
+        v0=test_user.email,
+        v1=test_user.role,
+        v2=test_user.organization_name
+    )
 
     # Action: Make a request to the login endpoint
     response = client.post(
@@ -42,7 +49,15 @@ def test_login_with_invalid_credentials_raises_error(client):
 
 
 def test_oauth_login_successful(client):
+    # Setup 1: Create a test user
     test_user = UserFactory()
+
+    # Setup 2: Define role permission for the user
+    _ = CasbinRuleFactory(
+        v0=test_user.email,
+        v1=test_user.role,
+        v2=test_user.organization_name
+    )
 
     # Action: Make a request to the oauth-login endpoint
     response = client.post(
