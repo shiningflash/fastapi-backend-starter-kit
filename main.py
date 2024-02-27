@@ -1,10 +1,9 @@
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI
 
 from core.logger import logger
-from app.schemas import *
 from app.db.base import engine
 
 from app.db.base_class import Base
