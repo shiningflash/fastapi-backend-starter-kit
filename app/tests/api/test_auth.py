@@ -97,9 +97,11 @@ def test_logout(client):
 # !!!!!!!!!!!!!!!!!!!!!!!!!
 
 # Parameterized Testing for Input Variations
-@pytest.mark.parametrize("email,password,status_code,detail", [
-    ("valid@test.com", "wrongpassword", 400, "Incorrect email or password"),
-    ("invalidemail", "password", 422, None),  # Assuming 422 Unprocessable Entity for invalid email format
+@pytest.mark.parametrize("email, password, status_code, detail", [
+    ("valid@test.com", "wrongpassword", 400, "Incorrect email or password"),  # Incorrect email or password
+    ("not-an-email", "password", 422, None),  # Assuming 422 Unprocessable Entity for invalid email format
+    ("", "password", 422, None),  # Empty email
+    ("valid@test.com", "", 400, None),  # Empty password
     (None, "password", 422, None),  # Missing email
     ("valid@test.com", None, 422, None),  # Missing password
 ])
@@ -133,13 +135,4 @@ def test_login_nonexistent_user(client):
 ])
 def test_login_security_vulnerabilities(client, email, password):
     response = client.post("api/login", json={"email": email, "password": password})
-    assert response.status_code in [400, 422]  # Expecting failure status codes
-
-
-# # Testing Rate Limiting (If Applicable)
-# def test_login_rate_limiting(client):
-#     for _ in range(10):  # Assuming rate limit is 5 attempts
-#         response = client.post(
-#             "api/login",
-#             json={"email": 'nonexistent@test.com', 'password': 'wrongpassword'})
-#     assert response.status_code == 429  # Assuming 429 Too Many Requests for rate limiting
+    assert response.status_code in [400, 422]
