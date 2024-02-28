@@ -13,6 +13,7 @@ from app.utils.invitation import generate_invitation_token, confirm_invitation_t
 from app.services.mail import send_email_background
 from core.config import settings
 from app.models import User
+from core.logger import logger
 
 
 invitation_router = APIRouter(prefix='/invitation', tags=['Invitation'])
@@ -51,17 +52,21 @@ def invite(
     new_invitation.model_dump()
     _ = invitation_crud.create(db=db, obj_in=new_invitation)
 
-    send_email_background(
-        background_tasks=background_tasks,
-        subject=f'Invitation to Join {invitation_data.organization}',
-        email_to=invitation_data.email,
-        body={
-            "full_name": invitation_data.full_name,
-            "email": invitation_data.email,
-            "organization": invitation_data.organization,
-            "created_by_name": created_by.full_name,
-            "invitation_url": f"{settings.BASE_URL}/accept-invitation/{unique_token}"}
-    )
+    try:
+        send_email_background(
+            background_tasks=background_tasks,
+            subject=f'Invitation to Join {invitation_data.organization}',
+            email_to=invitation_data.email,
+            body={
+                "full_name": invitation_data.full_name,
+                "email": invitation_data.email,
+                "organization": invitation_data.organization,
+                "created_by_name": created_by.full_name,
+                "invitation_url": f"{settings.BASE_URL}/accept-invitation/{unique_token}"}
+        )
+    except Exception as e:
+        logger.info(f"Failed to send email. Reason: {e}")
+        raise HTTPException(status_code=500, detail="Failed to send email")
 
     return {'message': 'Invitation sent successfully'}
 
@@ -73,14 +78,14 @@ async def accept_invitation(
 ):
     data = confirm_invitation_token(token=token)
     invitation = db.query(models.Invitation).filter_by(unique_token=token).first()
-    
+
     if not data or not invitation or invitation.expires_at < datetime.now():
         raise HTTPException(status_code=400, detail='Invalid or expired invitation link')
-    
+
     # Redirect to the signup page with pre-filled information (data)
     # return RedirectResponse(url=f"/user?email={invitation.email}&full_name={invitation.full_name}&organization_name={invitation.organization}&organizational_role='user'")
     return data
-    
+
 
 @invitation_router.get("/resend/{email}")
 async def resend_invitation(
@@ -89,12 +94,12 @@ async def resend_invitation(
     current_user = Depends(get_current_user)
 ):
     invitation = db.query(models.Invitation).filter_by(email=email).first()
-    
+
     if not invitation:
         raise HTTPException(status_code=400, detail='No existing invitation found for this email.')
-        
+
     created_by = db.query(User).filter(User.email==current_user.email).first()
-    
+
     data_to_create_unique_token = schemas.InvitationCreateRequest(
         full_name=invitation.full_name,
         email=invitation.email,
@@ -103,11 +108,11 @@ async def resend_invitation(
         role=invitation.role
     )
     unique_token = generate_invitation_token(data=data_to_create_unique_token)
-    
+
     invitation.unique_token = unique_token
     invitation.resent_count += 1
     _ = invitation_crud.update(db=db, obj_in=invitation)
-    
+
     await send_email_async(
       subject=f'Invitation to Join {invitation.organization}',
       email_to=invitation.email,
@@ -118,6 +123,5 @@ async def resend_invitation(
           "created_by_name": created_by.full_name,
           "invitation_url": f"{settings.BASE_URL}/accept-invitation/{unique_token}"}
     )
-    
+
     return {'message': 'Invitation resent successfully'}
-    

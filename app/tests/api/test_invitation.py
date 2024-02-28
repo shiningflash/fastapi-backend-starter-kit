@@ -57,10 +57,12 @@ def test_invite_missing_required_fields(client, missing_field):
     Each iteration tests a different required field missing from the request.
     """
 
-    # Remove the field being tested in this iteration
-    invitation_data.pop(missing_field)
+    dummy_invitation_data = invitation_data.copy()
 
-    response = client.post("api/invitation/invite", json=invitation_data)
+    # Remove the field being tested in this iteration
+    dummy_invitation_data.pop(missing_field)
+
+    response = client.post("api/invitation/invite", json=dummy_invitation_data)
 
     assert response.status_code == 422, f"Failed when {missing_field} is missing"
 
@@ -69,54 +71,34 @@ def test_invite_missing_required_fields(client, missing_field):
     assert any(missing_field in error.get("loc", []) for error in errors), f"Missing error details for {missing_field}"
 
 
-# def test_invite_email_send_failure(client, mocker):
-#     """Ensure the API handles email send failures gracefully."""
-#     mocker.patch(
-#         'app.utils.invitation.generate_invitation_token',
-#         return_value="unique_token_123"
-#     )
-#     mocker.patch(
-#         'app.db.crud.CRUDBase.create',
-#         return_value=mock.MagicMock()
-#     )  # Assume creation is successful
+def test_invite_email_send_failure(client, mocker, caplog):
+    """Ensure the API handles email send failures gracefully."""
 
-#     # Mock send_email_background to raise an exception
-#     mock_send_email = mocker.patch(
-#         'app.api.invitation.send_email_background',
-#         side_effect=Exception("Email Service Down")
-#     )
+    # Mocking a token generation function
+    mocker.patch(
+        'app.utils.invitation.generate_invitation_token',
+        return_value="unique_token_123"
+    )
+    mocker.patch(
+        'app.db.crud.CRUDBase.create',
+        return_value=mock.MagicMock()
+    )  # Assume creation is successful
 
-#     invitation_data = {
-#         "full_name": "Test User",
-#         "email": "test_email@example.com",
-#         "organization": "TestOrg",
-#         "organizational_role": "Developer",
-#         "role": "user"
-#     }
+    # Mock send_email_background to raise an exception
+    mock_send_email = mocker.patch(
+        'app.api.invitation.send_email_background',
+        side_effect=Exception("Email Service Down")
+    )
 
-#     response = client.post("api/invitation/invite", json=invitation_data)
+    # Execute the api call
+    response = client.post("api/invitation/invite", json=invitation_data)
 
-#     # In this scenario, decide on the expected behavior: Do you roll back the invitation? Or log the error and proceed?
-#     assert response.status_code == 500  # Or another appropriate status code based on your error handling logic
-#     assert 'Email Service Down' in response.json().get('detail', '')
-#     mock_send_email.assert_called_once()
+    # Assertions
+    assert response.status_code == 500
+    assert 'Failed to send email' in response.json().get('detail', '')
 
+    # Assert that an error was logged
+    assert "Email Service Down" in caplog.text
 
-# def test_invite_invalid_data_5365467587659(client, mocker):
-#     """Ensure the API returns a 422 error for invalid invitation data."""
-#     # Mocking without side_effect that raises an exception
-#     mocker.patch('app.utils.invitation.generate_invitation_token', return_value="unique_token_123")
-#     mocker.patch('app.api.invitation.send_email_background', return_value=None)  # No exception raised
-
-#     # Define incomplete invitation data
-#     invitation_data = {
-#         "full_name": "Test User",
-#         # Missing other required fields
-#     }
-
-#     response = client.post("api/invitation/invite", json=invitation_data)
-
-#     # Now, the test should reach this point without an exception being raised prematurely
-#     assert response.status_code == 422
-#     assert 'validation error' in response.json().get('detail', '').lower()
-
+    # Verify the mock was called to send email
+    mock_send_email.assert_called_once()
