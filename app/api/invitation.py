@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, BackgroundTasks
 from fastapi.params import Depends
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
@@ -10,7 +10,7 @@ from app.db.base import get_db
 from app.db.crud import CRUDBase
 from app.services.oauth2 import get_current_user, get_current_user_authorization
 from app.utils.invitation import generate_invitation_token, confirm_invitation_token
-from app.services.mail import send_email_async
+from app.services.mail import send_email_background
 from core.config import settings
 from app.models import User
 
@@ -29,14 +29,15 @@ def get_invitations(
 
 
 @invitation_router.post('/invite')
-async def invite(
+def invite(
+    background_tasks: BackgroundTasks,
     invitation_data: schemas.InvitationCreateRequest,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user_authorization)
 ):
     unique_token = generate_invitation_token(data=invitation_data)
     created_by = db.query(User).filter(User.email == current_user.email).first()
-    
+
     new_invitation = schemas.InvitationCreate(
         full_name=invitation_data.full_name,
         email=invitation_data.email,
@@ -46,21 +47,22 @@ async def invite(
         unique_token=unique_token,
         created_by_id=created_by.id
     )
-    
+
     new_invitation.model_dump()
     _ = invitation_crud.create(db=db, obj_in=new_invitation)
-    
-    await send_email_async(
-      subject=f'Invitation to Join {invitation_data.organization}',
-      email_to=invitation_data.email,
-      body={
-          "full_name": invitation_data.full_name,
-          "email": invitation_data.email,
-          "organization": invitation_data.organization,
-          "created_by_name": created_by.full_name,
-          "invitation_url": f"{settings.BASE_URL}/accept-invitation/{unique_token}"}
+
+    send_email_background(
+        background_tasks=background_tasks,
+        subject=f'Invitation to Join {invitation_data.organization}',
+        email_to=invitation_data.email,
+        body={
+            "full_name": invitation_data.full_name,
+            "email": invitation_data.email,
+            "organization": invitation_data.organization,
+            "created_by_name": created_by.full_name,
+            "invitation_url": f"{settings.BASE_URL}/accept-invitation/{unique_token}"}
     )
-    
+
     return {'message': 'Invitation sent successfully'}
 
 
