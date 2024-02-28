@@ -5,7 +5,6 @@ from fastapi.templating import Jinja2Templates
 
 from core.config import settings
 
-import json
 
 # Landing page template
 templates = Jinja2Templates(directory=Path(__file__).parent / '../../templates/email')
