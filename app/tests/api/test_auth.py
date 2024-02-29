@@ -66,8 +66,6 @@ def test_oauth_login_successful(client, test_db):
         "api/oauth-login",
         data={'username': test_user.email, 'password': 'password'}
     )
-    
-    logger.info(f'\n\n\n\n response: {response} \n\n\n')
 
     # Assertions
     assert response.status_code == 200

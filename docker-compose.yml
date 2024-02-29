@@ -32,6 +32,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    develop:
+      watch:
+        - action: rebuild
+          path: .
 
   db:
     image: postgres:11
