@@ -54,8 +54,7 @@ def invite(
     _ = invitation_crud.create(db=db, obj_in=new_invitation)
 
     try:
-        send_email_background(
-            background_tasks=background_tasks,
+        send_email_task.delay(
             subject=f'Invitation to Join {invitation_data.organization}',
             email_to=invitation_data.email,
             body={
@@ -115,7 +114,6 @@ async def resend_invitation(
     invitation.resent_count += 1
     _ = invitation_crud.update(db=db, obj_in=invitation)
 
-    # Inside your FastAPI route
     send_email_task.delay(
         subject=f'Invitation to Join {invitation.organization}',
         email_to=invitation.email,
