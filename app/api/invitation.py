@@ -14,6 +14,7 @@ from app.services.mail import send_email_background
 from core.config import settings
 from app.models import User
 from core.logger import logger
+from app.worker.celery import send_email_task
 
 
 invitation_router = APIRouter(prefix='/invitation', tags=['Invitation'])
@@ -89,6 +90,7 @@ async def accept_invitation(
 
 @invitation_router.get("/resend/{email}")
 async def resend_invitation(
+    background_tasks: BackgroundTasks,
     email: str,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
@@ -113,15 +115,17 @@ async def resend_invitation(
     invitation.resent_count += 1
     _ = invitation_crud.update(db=db, obj_in=invitation)
 
-    await send_email_async(
-      subject=f'Invitation to Join {invitation.organization}',
-      email_to=invitation.email,
-      body={
-          "full_name": invitation.full_name,
-          "email": invitation.email,
-          "organization": invitation.organization,
-          "created_by_name": created_by.full_name,
-          "invitation_url": f"{settings.BASE_URL}/accept-invitation/{unique_token}"}
+    # Inside your FastAPI route
+    send_email_task.delay(
+        subject=f'Invitation to Join {invitation.organization}',
+        email_to=invitation.email,
+        body={
+            "full_name": invitation.full_name,
+            "email": invitation.email,
+            "organization": invitation.organization,
+            "created_by_name": created_by.full_name,
+            "invitation_url": f"{settings.BASE_URL}/accept-invitation/{unique_token}"
+        }
     )
 
     return {'message': 'Invitation resent successfully'}

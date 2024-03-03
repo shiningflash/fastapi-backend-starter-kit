@@ -68,7 +68,7 @@ Now, the project will be running on `http://localhost:8000`
 
 ### Pgadmin4
 
-`http://localhost:5050`
+http://localhost:5050
 
 ## Testing
 
@@ -77,6 +77,10 @@ To run tests using Pytest, execute the following command within the virtual envi
 ```bash
 $ make test
 ```
+
+## Flower
+
+Navigate to http://localhost:5556 to view the dashboard. You should see one worker ready to go.
 
 ## Documentation
 
