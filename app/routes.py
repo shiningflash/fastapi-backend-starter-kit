@@ -8,6 +8,12 @@ from app.api.invitation import invitation_router
 
 
 router = APIRouter(prefix='/api')
+
+@router.get('/')
+def hello_world():
+    return 'Hello, World!'
+
+
 router.include_router(user_router)
 router.include_router(auth_router)
 router.include_router(blog_router)

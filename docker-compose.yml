@@ -7,6 +7,7 @@ services:
     depends_on:
       - db
       - test-db
+      - redis
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db/db
       - TEST_DATABASE_URL=postgresql://postgres:postgres@test-db/test-db
@@ -27,11 +28,17 @@ services:
       - INVITATION_URL_SECRET_KEY=INVITATION_URL_SECRET_KEY_HERE
       - INVITATION_URL_SECURITY_PASSWORD_SALT=INVITATION_URL_SECURITY_PASSWORD_SALT_HERE
       - INVITATION_URL_MAX_AGE=172800
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    develop:
+      watch:
+        - action: rebuild
+          path: .
 
   db:
     image: postgres:11
@@ -54,6 +61,51 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=test-db
+  
+  worker:
+    build: .
+    command: celery -A app.worker.celery worker --loglevel=info
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db/db
+      - TEST_DATABASE_URL=postgresql://postgres:postgres@test-db/test-db
+      - BASE_URL=http://localhost:8000
+      - APP_ENV=development
+      - JWT_REFRESH_SECRET_KEY=JWT_REFRESH_SECRET_KEY_HERE
+      - JWT_SECRET_KEY=WT_SECRET_KEY_HERE
+      - ROLLBAR_ACCESS_TOKEN=ROLLBAR_ACCESS_TOKEN_HERE
+      - BUCKET_NAME=BUCKET_NAME
+      - OAUTH_CLIENT_ID=CLIENT_IDw
+      - OAUTH_CLIENT_SECRET=OAUTH_CLIENT_SECRET
+      - MAIL_USERNAME=norval.hahn60@ethereal.email
+      - MAIL_PASSWORD=NupfGHXtsUdgx36VuK
+      - MAIL_FROM=norval.hahn60@ethereal.email
+      - MAIL_PORT=587
+      - MAIL_SERVER=smtp.ethereal.email
+      - MAIL_FROM_NAME=Norval Hahn
+      - INVITATION_URL_SECRET_KEY=INVITATION_URL_SECRET_KEY_HERE
+      - INVITATION_URL_SECURITY_PASSWORD_SALT=INVITATION_URL_SECURITY_PASSWORD_SALT_HERE
+      - INVITATION_URL_MAX_AGE=172800
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - web
+      - redis
+
+  redis:
+    image: redis:7
+  
+  dashboard:
+    build: .
+    command: celery --broker=redis://redis:6379/0 flower --port=5555
+    ports:
+      - 5556:5555
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - web
+      - redis
+      - worker
 
 volumes:
   db:

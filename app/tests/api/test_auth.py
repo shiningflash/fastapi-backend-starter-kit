@@ -5,9 +5,9 @@ from app.tests.factories import UserFactory, CasbinRuleFactory
 from core.logger import logger
 
 
-def test_login_logout_successful(client, my_test_db):
+def test_login_logout_successful(client, test_db):
     # Setup 1: Create a test user
-    test_user = UserFactory(session=my_test_db)
+    test_user = UserFactory(session=test_db)
 
     # Setup 2: Define role permission for the user
     _ = CasbinRuleFactory(
@@ -48,9 +48,9 @@ def test_login_with_invalid_credentials_raises_error(client):
     assert "authorization" not in response.cookies
 
 
-def test_oauth_login_successful(client, my_test_db):
+def test_oauth_login_successful(client, test_db):
     # Setup 1: Create a test user
-    test_user = UserFactory(session=my_test_db)
+    test_user = UserFactory(session=test_db)
     
     logger.info(f'\n\n\n\n test_user: {test_user.email} \n\n\n')
 
@@ -66,8 +66,6 @@ def test_oauth_login_successful(client, my_test_db):
         "api/oauth-login",
         data={'username': test_user.email, 'password': 'password'}
     )
-    
-    logger.info(f'\n\n\n\n response: {response} \n\n\n')
 
     # Assertions
     assert response.status_code == 200

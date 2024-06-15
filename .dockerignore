@@ -1,0 +1,17 @@
+app/logfile.log
+venv/
+.venv/
+docker-compose.yml
+*.log
+*.md
+.env.example
+.env
+.gitignore
+.git
+__pycache__
+*/temp*
+*/*/temp*
+temp?
+Dockerfile
+.dockerignore
+*.md

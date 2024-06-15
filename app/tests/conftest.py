@@ -11,8 +11,6 @@ from app import schemas
 from app.tests.utils.utils import push_data_into_test_db
 from app.services.oauth2 import get_current_user_authorization
 
-from core.logger import logger
-
 
 engine = create_engine(settings.TEST_DATABASE_URL)
 
@@ -26,7 +24,7 @@ db = TestingSessionLocal()
 
 def get_current_user_authorization_override():
     mock_user = schemas.TokenData(
-        email='testuser4@example.com',
+        email='testuser@example.com',
         full_name='test user full name',
         organization_name='test',
         role='admin'
@@ -35,7 +33,7 @@ def get_current_user_authorization_override():
 
 
 @pytest.fixture
-def my_test_db():
+def test_db():
     yield TestingSessionLocal()
     for table in reversed(Base.metadata.sorted_tables):
         with engine.connect() as conn:
@@ -49,14 +47,14 @@ def my_test_db():
 
 
 @pytest.fixture()
-def client(my_test_db):
-    def test_my_test_db():
-        return my_test_db
-    
-    app.dependency_overrides[get_db] = test_my_test_db
+def client(test_db):
+    def get_test_db():
+        return test_db
+
+    app.dependency_overrides[get_db] = get_test_db
     app.dependency_overrides[get_current_user_authorization] = get_current_user_authorization_override
-    
+
     with TestClient(app) as test_client:
-        push_data_into_test_db(my_test_db)
+        push_data_into_test_db(test_db)
         yield test_client
     app.dependency_overrides.clear()

@@ -47,3 +47,7 @@ faker
 factory-boy
 pytest-asyncio
 pytest-mock
+aiofiles
+celery
+redis
+flower

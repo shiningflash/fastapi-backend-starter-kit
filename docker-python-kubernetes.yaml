@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-demoapp
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: fastapi
+  template:
+    metadata:
+      labels:
+        service: fastapi
+    spec:
+      containers:
+       - name: fastapi-service
+         image: amirulislamwelldev/fastapi-demoapp
+         imagePullPolicy: Always
+         env:
+          - name: POSTGRES_PASSWORD
+            value: postgres
+          - name: DATABASE_URL
+            value: postgresql://postgres:postgres@db/db
+          - name: TEST_DATABASE_URL
+            value: postgresql://postgres:postgres@test-db/test-db
+          - name: BASE_URL
+            value: http://service-entrypoint:5000
+          - name: APP_ENV
+            value: development
+          - name: JWT_REFRESH_SECRET_KEY
+            value: JWT_REFRESH_SECRET_KEY_HERE
+          - name: JWT_SECRET_KEY
+            value: JWT_SECRET_KEY_HERE
+          - name: ROLLBAR_ACCESS_TOKEN
+            value: ROLLBAR_ACCESS_TOKEN_HERE
+          - name: BUCKET_NAME
+            value: BUCKET_NAME
+          - name: OAUTH_CLIENT_ID
+            value: CLIENT_ID
+          - name: OAUTH_CLIENT_SECRET
+            value: OAUTH_CLIENT_SECRET
+          - name: MAIL_USERNAME
+            value: norval.hahn60@ethereal.email
+          - name: MAIL_PASSWORD
+            value: NupfGHXtsUdgx36VuK
+          - name: MAIL_FROM
+            value: norval.hahn60@ethereal.email
+          - name: MAIL_PORT
+            value: "587"
+          - name: MAIL_SERVER
+            value: smtp.ethereal.email
+          - name: MAIL_FROM_NAME
+            value: Norval Hahn
+          - name: INVITATION_URL_SECRET_KEY
+            value: INVITATION_URL_SECRET_KEY_HERE
+          - name: INVITATION_URL_SECURITY_PASSWORD_SALT
+            value: INVITATION_URL_SECURITY_PASSWORD_SALT_HERE
+          - name: INVITATION_URL_MAX_AGE
+            value: "172800"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-entrypoint
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    service: fastapi
+  ports:
+  - port: 5000
+    targetPort: 5000
+    nodePort: 30001
