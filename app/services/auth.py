@@ -12,7 +12,6 @@ from core.config import settings
 from core.logger import logger
 from app.schemas.auth import TokenPayload
 from app.services.oauth_client import OAuth2ClientCredentials
-# import logging
 
 from app.utils.security import verify_password
 
