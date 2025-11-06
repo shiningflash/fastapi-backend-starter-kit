@@ -74,9 +74,7 @@ def get_current_active_user(token: str = Depends(get_token), db: Session = Depen
                 detail="Token expired",
             )
         user: Union[dict[str, Any], None] = userCrud.get_by_field(db, field="email", value=token_data.sub)
-        print(f'\n\n\n1: {user}\n\n\n')
         user: Union[dict[str, Any], None] = userCrud.get_by_field(db, field="id", value=token_data.sub)
-        print(f'\n\n\n2: {user}\n\n\n')
         if user is None:
             raise credentials_exception
         return user
