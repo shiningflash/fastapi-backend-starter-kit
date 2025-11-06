@@ -8,6 +8,7 @@ A professional, scalable, and production-ready template for backend applications
 - **PostgreSQL**: A robust relational database system supporting complex queries and transactions.
 - **Alembic**: An efficient database migration tool to manage schema changes with version control.
 - **Docker**: Ensures consistent application behavior across environments, simplifying development and deployment.
+- **Celery + Redis**: Distributed task queue for sending email invitation and other background tasks.
 - **Pytest**: Enables comprehensive unit and integration testing for improved reliability.
 - **Async CRUD Operations**: Provides fully asynchronous Create, Read, Update, and Delete operations for high-concurrency scenarios.
 - **Flower (Optional)**: Workflow monitoring and management for background tasks with Celery.
