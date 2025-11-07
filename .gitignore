@@ -175,3 +175,5 @@ cython_debug/
 .pypirc
 
 .venv
+
+.ruff_cache/
